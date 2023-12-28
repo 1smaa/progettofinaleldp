@@ -53,8 +53,6 @@ namespace Box{
 
             int costruzioni(); //Ritorna le costruzioni presenti sulla casella
 
-
-        private:
     };
 }
 

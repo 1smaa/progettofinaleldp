@@ -9,6 +9,8 @@ namespace Scoreboard{
     class Scoreboard{
 
         protected:
+
+            
            std::vector<Box> board;
     };
 }

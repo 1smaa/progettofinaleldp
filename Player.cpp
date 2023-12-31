@@ -75,7 +75,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
     }
     Box* arrivalBox=s.getBox(this->pos);
     log+="- Il Giocatore "+std::to_string(this->id)+" è arrivato alla casella "+std::to_string(arrivalBox->getIdBox())+"\n";
-    if(arrivalBox->getOwner()==this->id){
+    if(arrivalBox->getOwner()->id==this->id){
         switch(arrivalBox->getBoxType()){
             case 2:
                 switch(arrivalBox->getBoxConstruction()){

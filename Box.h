@@ -21,7 +21,7 @@
             void setIdBox(int id){this->box_id_ = id; }
             void setBoxConstruction(int construction){this->box_construction_ = construction;}
             void setBoxCost(int cost){this->box_cost_ = cost; }
-            void setOwner(int id_owner){this->owner_ = id_owner;}
+            void setOwner(Player::Player* owner){this->owner_ = owner;}
 
             //Funzioni per return variabili protected
 
@@ -29,7 +29,7 @@
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}
-            int getOwner(){return this->owner_;}
+            Player::Player* getOwner(){return this->owner_;};
 
         //Bozza di funzioni
             void print_box_info(); //Stampa le informazioni della casella
@@ -57,7 +57,7 @@
             int box_stay_cost_;
 
             //Indica il possessore della casella.
-            int owner_; 
+            Player::Player* owner_; 
     };
 
 

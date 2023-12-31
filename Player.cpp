@@ -18,7 +18,7 @@
 #define ALB_STD 5
 #define ALB_LUX 10
 
-bool Player::Player::isMine(Box s){
+bool Player::isMine(Box s){
     // Scansiona le caselle in possesso fino a trovare quella indicata
     for(int i=0;i<this->squares.size();i++){
         if(s.getIdBox()==(this->squares[i].getIdBox())){
@@ -28,7 +28,7 @@ bool Player::Player::isMine(Box s){
     return false;
 }
 
-std::map<std::string, std::function<void(Scoreboard::Scoreboard s)>> Player::Human::initialize_commands() {
+std::map<std::string, std::function<void(Scoreboard::Scoreboard s)>> Player::initialize_commands() {
     return std::map<std::string, std::function<void(Scoreboard::Scoreboard s)>>{
         {"/help", [](Scoreboard::Scoreboard s) {
             std::cout << "Ecco la lista dei comandi: \n";
@@ -45,24 +45,43 @@ std::map<std::string, std::function<void(Scoreboard::Scoreboard s)>> Player::Hum
     };
 }
 
-bool Player::Human::isCommand(std::string s){
+bool Player::isCommand(std::string s){
     return ((s!="")&&(s[0]=='/'));
 }
 
-bool Player::Human::decide(std::string question){
+bool Player::human_decide(std::string question){
     std::cout<<question<<" (Y/N)"<<std::endl;
     char response;
     std::cin>>response;
     return response=='Y';
 }
 
-bool Player::Computer::decide(std::string question){
+bool Player::computer_decide(std::string question){
     srand(time(NULL));
     int r=rand()%101;
     return r<=25;
 }
 
-std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
+bool Player::decide(std::string question){
+    if(this->automate){
+        return this->computer_decide(question);
+    } else {
+        return this->human_decide(question);
+    }
+}
+
+std::string Player::move(Scoreboard::Scoreboard s,Dadi d){
+    if(!this->automate){ 
+        std::string input;
+        std::cin>>input;
+        while(this->isCommand(input)){
+            if(this->commands.count(input)){
+                this->commands[input](s);
+            } else {
+                break;
+            }
+        }
+    }
     std::string log="";
     int t=d.lancia();
     log+="- Il Giocatore "+std::to_string(this->id)+" ha tirato i dadi ottendendo "+std::to_string(t)+"\n";
@@ -143,6 +162,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
                     arrivalBox->setOwner(this->id);
                     this->saldo-=TERRENO_ECON;
                     log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+std::to_string(arrivalBox->getIdBox())+"\n";
+                    this->squares.push_back(*arrivalBox);
                 }
                 break;
             case 3:
@@ -150,6 +170,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
                     arrivalBox->setOwner(this->id);
                     this->saldo-=TERRENO_STD;
                     log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+std::to_string(arrivalBox->getIdBox())+"\n";
+                    this->squares.push_back(*arrivalBox);
                 }
                 break;
             case 4:
@@ -157,6 +178,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
                     arrivalBox->setOwner(this->id);
                     this->saldo-=TERRENO_LUX;
                     log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+std::to_string(arrivalBox->getIdBox())+"\n";
+                    this->squares.push_back(*arrivalBox);
                 }
                 break;
         }
@@ -169,21 +191,4 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
         }
     }
     return log;
-}
-
-std::string Player::Human::move(Scoreboard::Scoreboard s,Dadi d){
-    std::string input;
-    std::cin>>input;
-    while(this->isCommand(input)){
-        if(this->commands.count(input)){
-            this->commands[input](s);
-        } else {
-            break;
-        }
-    }
-    return Player::move(s,d);
-}
-
-std::string Player::Computer::move(Scoreboard::Scoreboard s,Dadi d){
-    return Player::move(s,d);
 }

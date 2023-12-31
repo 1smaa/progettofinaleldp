@@ -75,7 +75,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
     }
     Box* arrivalBox=s.getBox(this->pos);
     log+="- Il Giocatore "+std::to_string(this->id)+" è arrivato alla casella "+std::to_string(arrivalBox->getIdBox())+"\n";
-    if(arrivalBox->owner==this->id){
+    if(arrivalBox->getOwner()==this->id){
         switch(arrivalBox->getBoxType()){
             case 2:
                 switch(arrivalBox->getBoxConstruction()){
@@ -136,7 +136,7 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
                 }
             default: break;
         }
-    } else if(arrivalBox->owner==NO_PLAYER){
+    } else if(arrivalBox->getOwner()==NO_PLAYER){
         switch(arrivalBox->getBoxType()){
             case 2:
                 if(this->saldo>=TERRENO_ECON&&this->decide("Comprare una casella economica? ")){
@@ -161,8 +161,8 @@ std::string Player::Player::move(Scoreboard::Scoreboard s,Dadi d){
                 break;
         }
     } else {
-        log+="- Il Giocatore "+std::to_string(this->id)+" ha pagato al giocatore "+std::to_string(arrivalBox->owner.getId())+" "+std::to_string(arrivalBox->pernottamento())+" per pernottamento nella casella "+std::to_string(arrivalBox->getIdBox())+"\n";
-        arrivalBox->owner+=std::min(this->saldo,arrivalBox->pernottamento());
+        log+="- Il Giocatore "+std::to_string(this->id)+" ha pagato al giocatore "+std::to_string(arrivalBox->getOwner())+" "+std::to_string(arrivalBox->pernottamento())+" per pernottamento nella casella "+std::to_string(arrivalBox->getIdBox())+"\n";
+        arrivalBox->owner_+=std::min(this->saldo,arrivalBox->pernottamento());
         this->saldo-=arrivalBox->pernottamento();
         if(this->saldo<0){
             log+="- Il Giocatore "+std::to_string(this->id)+" è  stato eliminato.";

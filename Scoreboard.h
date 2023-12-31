@@ -3,15 +3,15 @@
 
 #include <vector>
 
-
 namespace Scoreboard{
 
     class Scoreboard{
-
+        public:
+            Box* getBox(int id_box); 
         protected:
 
-            
-           std::vector<Box> board;
+
+            std::vector<Box> board;
     };
 }
 

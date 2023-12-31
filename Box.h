@@ -1,5 +1,6 @@
 #ifndef FUNCTION_BOX_H
 #define FUNCTION_BOX_H
+
     class Box{
 
         public:
@@ -20,6 +21,7 @@
             void setIdBox(int id){this->box_id_ = id; }
             void setBoxConstruction(int construction){this->box_construction_ = construction;}
             void setBoxCost(int cost){this->box_cost_ = cost; }
+            void setOwner(int id_owner){this->owner_ = id_owner;}
 
             //Funzioni per return variabili protected
 
@@ -27,6 +29,7 @@
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}
+            int getOwner(){return this->owner_;}
 
         //Bozza di funzioni
             void print_box_info(); //Stampa le informazioni della casella
@@ -37,7 +40,7 @@
 
             std::string construction(); //Ritorna le costruzioni presenti sulla casella
 
-        private:
+        protected:
             //Definisce il tipo di casella: Economica, Standard, Lusso
             int box_type_;
 
@@ -52,6 +55,9 @@
 
             //Costo associato al pernottamento
             int box_stay_cost_;
+
+            //Indica il possessore della casella.
+            int owner_; 
     };
 
 

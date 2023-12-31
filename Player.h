@@ -7,6 +7,7 @@
 #include <string>
 #include "Box.h"
 #include "Scoreboard.h"
+#include "Dadi.h"
 
 #define uint unsigned int
 
@@ -25,7 +26,7 @@ namespace Player{
         // vector di caselle associate al giocatore
         std::vector<Box> squares;
         //funzione virtuale per gestire le decisioni del giocatore
-        virtual bool decide() = 0;
+        virtual bool decide(std::string question) = 0;
     public:
         // costruttore di default
         Player() : id(0), pos(0), saldo(0){};
@@ -37,7 +38,7 @@ namespace Player{
         Player(const Player&) = delete;
         Player& operator=(const Player&) = delete;
         // funzione virtuale che gestisce la mossa del giocatore
-        virtual uint move(Scoreboard::Scoreboard s) = 0;
+        virtual std::string move(Scoreboard::Scoreboard s,Dadi d);
         // restituisce 1 (true) se il giocatore è ancora in gioco, 0 (false) se è stato eliminato
         bool inPlay(){ return this->saldo>=0; };
         // funzioni per settare le variabili del player
@@ -58,7 +59,7 @@ namespace Player{
         // mappa per l'interpretazione dei comandi
         std::map<std::string,std::function<void(Scoreboard::Scoreboard s)>> commands;
         // logica di decisione per azioni interattive ( via terminal )
-        bool decide() override;
+        bool decide(std::string question) override;
         // initializza la mappa dei comandi
         std::map<std::string,std::function<void(Scoreboard::Scoreboard s)>> initialize_commands();
         // restituisce 1 (true) se la stringa è un comando, 0 (false) altrimenti
@@ -71,15 +72,15 @@ namespace Player{
         Human(uint id,int saldo): Player(id,saldo), commands(this->initialize_commands()){};
         Human(uint id,int saldo,uint pos): Player(id,saldo,pos), commands(this->initialize_commands()){};
         // genera la prossima mossa
-        uint move(Scoreboard::Scoreboard s) override;
+        std::string move(Scoreboard::Scoreboard s,Dadi d);
     };
     class Computer : public Player{
     private:
         // logica di decisione per azioni automatiche
-        bool decide() override;
+        bool decide(std::string question) override;
     public:
         // genera la prossima mossa
-        uint move(Scoreboard::Scoreboard s) override;
+        std::string move(Scoreboard::Scoreboard s,Dadi d);
     };
 }
 

@@ -1,12 +1,13 @@
 #ifndef FUNCTION_BOX_H
 #define FUNCTION_BOX_H
+#include "Player.h"
 
     class Box{
 
         public:
             
-            //Costruttori con parametri    
-            Box(int id, int tipo) : box_id_(id), box_type_(tipo), box_stay_cost_(0),owner_{nullptr}{}
+            //Costruttori    
+            Box(int id, int tipo) : box_id_(id), box_type_(tipo), box_construction_(0), box_stay_cost_(0),owner_{nullptr}{}
             Box(int id, int tipo, int costruzioni) : box_id_(id), box_type_(tipo), box_construction_(costruzioni), owner_{nullptr}{}
 
             //Costruttori di copia e spostamento
@@ -22,7 +23,7 @@
 
             //Funzioni per return variabili protected
 
-            int getBoxType(){return this->box_type_;}
+            char getBoxType();
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}

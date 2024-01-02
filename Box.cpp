@@ -21,13 +21,13 @@ box_construction_ = tipo di costruzione presente sulla casella
 //Implementazione costruttori
 
 Box::Box(int id, int tipo){
-    this->box_construction_ = 0; //Inizialmente ogni casella rappresenta un terreno acquistabile
+    //Inizialmente ogni casella rappresenta un terreno acquistabile
     //Assegnamento prezzo per acquisto
     this-> box_cost_ = assegnaCosto(this->box_type_);
 }
 
 Box::Box(int id, int tipo, int costruzioni){
-    //Controllo il prezzo da assegnare alla casella, se non sono presenti costruzioni
+    //Controllo il prezzo da assegnare alla casella, 
     this->box_cost_ = assegnaCosto(this->box_type_);
     //Controllo il prezzo da assegnare al pernottamento, se sono presenti costruzioni
     this->box_stay_cost_ = assegnaPernottamento(this->box_type_, this->box_construction_);
@@ -106,6 +106,13 @@ std::string Box::construction(){
             break;
     }
 
+}
+
+char Box::getBoxType(){
+    if(this->box_type_ = 0) return 'P';
+    else if(this->box_type_ = 2) return 'E';
+    else if(this->box_type_ = 3) return 'S';
+    else if(this->box_type_ = 4) return 'L';
 }
 
 //Funzioni ausiliare

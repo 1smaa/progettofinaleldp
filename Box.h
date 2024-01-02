@@ -4,13 +4,10 @@
     class Box{
 
         public:
-            //Costruttore di default
-            // Box() : box_type_(0), id_box_(0), box_construction_(0), box_cost_(0){}; //DA VALUTARE??
-
+            
             //Costruttori con parametri    
-            Box(int id): box_id_(id){}
-            Box(int id, int tipo) : box_id_(id), box_type_(tipo), box_stay_cost_(0){}
-            Box(int id, int tipo, int costruzioni) : box_id_(id), box_type_(tipo), box_construction_(costruzioni){}
+            Box(int id, int tipo) : box_id_(id), box_type_(tipo), box_stay_cost_(0),owner_{nullptr}{}
+            Box(int id, int tipo, int costruzioni) : box_id_(id), box_type_(tipo), box_construction_(costruzioni), owner_{nullptr}{}
 
             //Costruttori di copia e spostamento
             //Box(const Box&) = delete;
@@ -21,7 +18,7 @@
             void setIdBox(int id){this->box_id_ = id; }
             void setBoxConstruction(int construction){this->box_construction_ = construction;}
             void setBoxCost(int cost){this->box_cost_ = cost; }
-            void setOwner(Player::Player* owner){this->owner_ = owner;}
+            void setOwner(Player* owner){this->owner_ = owner;}
 
             //Funzioni per return variabili protected
 
@@ -29,7 +26,7 @@
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}
-            Player::Player* getOwner(){return this->owner_;};
+            Player* getOwner(){return this->owner_;};
 
         //Bozza di funzioni
             void print_box_info(); //Stampa le informazioni della casella
@@ -57,7 +54,7 @@
             int box_stay_cost_;
 
             //Indica il possessore della casella.
-            Player::Player* owner_; 
+            Player* owner_; 
     };
 
 

@@ -19,10 +19,6 @@ box_construction_ = tipo di costruzione presente sulla casella
 */
 
 //Implementazione costruttori
-Box::Box(int id){
-    this->box_type_ = 0;
-    this->box_cost_ = 0;
-}
 
 Box::Box(int id, int tipo){
     this->box_construction_ = 0; //Inizialmente ogni casella rappresenta un terreno acquistabile

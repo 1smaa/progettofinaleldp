@@ -95,7 +95,68 @@ std::string Scoreboard::print_scoreboard(){
         }
         else{
             //Ricavo il tipo di casella, PARTENZA, ECONOMICA, STANDARD, LUSSO
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[i]->getBoxType();
+            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[i]->getBoxType()<<"|";
+        }
+    }
+    
+    //Seconda riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"B";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[13]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[22]->getBoxType()<<"|"<<std::endl;
+
+    
+    //Terza riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"C";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[12]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[23]->getBoxType()<<"|"<<std::endl;
+
+    //Quarta riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"D";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[11]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[24]->getBoxType()<<"|"<<std::endl;
+
+    //Quinta riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"E";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[10]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[25]->getBoxType()<<"|"<<std::endl;
+
+    //Sesta riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"F";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[9]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[26]->getBoxType()<<"|"<<std::endl;
+
+    //Settima riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"G";
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[8]->getBoxType()<<"|";
+    for(int i=0; i<6; i++){
+         stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ');
+    }
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[27]->getBoxType()<<"|"<<std::endl;
+
+    //Ottava riga del tabellone
+    stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"H";
+    for(int i=7; i>=0; i--){
+        if(i==7){
+            stream_string   <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"||";
+        }
+        else{
+            //Ricavo il tipo di casella, PARTENZA, ECONOMICA, STANDARD, LUSSO
+            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|"<<board[i]->getBoxType()<<"|";
         }
     }
 }

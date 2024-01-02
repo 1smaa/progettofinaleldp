@@ -17,19 +17,15 @@ private:
 
 public: 
     //costruttori
-    Partita(const std::vector<Player::Player>& giocatori, const Scoreboard::Scoreboard& tabellone);
-    Partita(const std::vector<Player::Player>& giocatori, const Scoreboard::Scoreboard& tabellone, int turno);
-    //costruttore di copia
-    Partita(const Partita&);
-    //costruttore di spostamento
-    Partita(Partita&&);
-
+    Partita(const std::vector<Player>& giocatori, const Scoreboard::Scoreboard& tabellone);
+    Partita(const std::vector<Player>& giocatori, const Scoreboard::Scoreboard& tabellone, int turno);
+    
     //funzioni
     int inizia();
     int prossimoTurno();
     bool terminata() const;
     std::string log() const;
-    std::vector<Player::Player>vincitore() const;
+    std::vector<Player>vincitore() const;
 
 };
 #endif

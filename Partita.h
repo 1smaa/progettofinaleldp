@@ -9,7 +9,7 @@
 
 class Partita{
 private:
-    std::vector<Player::Player> giocatori;
+    std::vector<Player> giocatori;
     Scoreboard::Scoreboard tabellone;
     int turno;
     std::string s;

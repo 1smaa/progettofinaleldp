@@ -19,11 +19,7 @@ private:
 public: 
     //costruttori
     Partita(const std::vector<Player>& giocatori, const Scoreboard& tabellone);
-    Partita(const std::vector<Player>& giocatori, const Scoreboard& tabellone, int turno);
-    //costruttore di copia
-    Partita (const Partita& ) 
-    //costruttore di spostamento
-    Partita (Partita&& ) 
+    Partita(const std::vector<Player>& giocatori, const Scoreboard& tabellone, int turno); 
 
     //funzioni
     int inizia();

@@ -1,7 +1,7 @@
 #ifndef PARTITA_H
 #define PARTITA_H
 
-#include "Dadi.h"
+#include "Dado.h"
 #include "Player.h"
 #include "Scoreboard.h"
 #include <vector>
@@ -10,16 +10,21 @@
 class Partita{
 private:
     std::vector<Player> giocatori;
-    Scoreboard::Scoreboard tabellone;
+    Scoreboard tabellone;
     int turno;
+    int prossimoGiocatore;
     std::string s;
-    Dadi d;
+    Dado d;
 
 public: 
     //costruttori
-    Partita(const std::vector<Player>& giocatori, const Scoreboard::Scoreboard& tabellone);
-    Partita(const std::vector<Player>& giocatori, const Scoreboard::Scoreboard& tabellone, int turno);
-    
+    Partita(const std::vector<Player>& giocatori, const Scoreboard& tabellone);
+    Partita(const std::vector<Player>& giocatori, const Scoreboard& tabellone, int turno);
+    //costruttore di copia
+    Partita (const Partita& ) 
+    //costruttore di spostamento
+    Partita (Partita&& ) 
+
     //funzioni
     int inizia();
     int prossimoTurno();

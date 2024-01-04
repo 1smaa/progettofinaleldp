@@ -24,9 +24,9 @@ protected:
     // vector di caselle associate al giocatore
     std::vector<Box> squares;
     // mappa per l'interpretazione dei comandi
-    std::map<std::string,std::function<void(Scoreboard::Scoreboard s)>> initialize_commands();
+    std::map<std::string,std::function<void(Scoreboard s)>> initialize_commands();
     bool isCommand(std::string s);
-    std::map<std::string,std::function<void(Scoreboard::Scoreboard s)>> commands;
+    std::map<std::string,std::function<void(Scoreboard s)>> commands;
     //funzione virtuale per gestire le decisioni del giocatore
     bool decide(std::string question);
     bool human_decide(std::string question);
@@ -39,7 +39,7 @@ public:
     Player(bool automate,uint id,int saldo): automate(automate),id(id), pos(0), saldo(saldo), commands(this->initialize_commands()){};
     Player(bool automate,uint id,int saldo,uint pos): automate(automate),id(id), pos(pos), saldo(saldo), commands(this->initialize_commands()){};
     // funzione virtuale che gestisce la mossa del giocatore
-    virtual std::string move(Scoreboard::Scoreboard s,Dadi d);
+    virtual std::string move(Scoreboard s,Dadi d);
     // restituisce 1 (true) se il giocatore è ancora in gioco, 0 (false) se è stato eliminato
     bool inPlay(){ return this->saldo>=0; };
     // funzioni per settare le variabili del player

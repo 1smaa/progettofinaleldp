@@ -74,6 +74,32 @@ bool Player::decide(std::string question){
     }
 }
 
+std::string Player::to_coordinates(int index){
+    if(index<22&&index>=14){
+        return "A"+std::to_string(index-13);
+    }
+    if(index<8){
+        return "H"+std::to_string(8-index);
+    }
+    if(index<=13&&index>=8){
+        return {(char)('O'-index),'1'};
+    }
+    if(index>=22){
+        return {(char)(index+','),'8'};
+    }
+    return "";
+}
+
+std::string Player::logConstruction(){
+    std::string log="";
+    for(int i=0;i<this->squares.size();i++){
+        if(squares[i].getBoxConstruction()!=0){
+            log+=this->to_coordinates(squares[i].getIdBox())+",";
+        }
+    }
+    return log;
+}
+
 std::string Player::move(Scoreboard s,Dadi d){
     if(!this->automate){ 
         std::string input;

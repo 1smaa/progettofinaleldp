@@ -18,8 +18,37 @@ box_stay_cost_ = costo pernottamento
 box_construction_ = tipo di costruzione presente sulla casella
 */
 
-//Implementazione costruttori
+//Funzioni ausiliare
 
+//Funzione per assegnare il costo ad una casella in base al tipo
+int assegnaCosto(int tipo_casella_){
+    //Se la casella è un terreno assegno i costi associati all'acquisto della casella
+        if(tipo_casella_ = 2) return 6;
+        else if(tipo_casella_= 3) return 10;
+        else if(tipo_casella_ = 4) return 20;
+        else return 0; //La casella è la partenza o è una casella angolare (quindi non acquistabili)
+}
+
+//Funzione per assegnare il costo del pernottamento in base al tipo di casella e alla struttura costruita sopra
+int assegnaPernottamento(int tipo_casella_, int costruzioni_casella_){
+        //Se nella casella è presente una casa (=1) associo i costi del pernottamento
+    if(costruzioni_casella_=1) 
+        if(tipo_casella_ = 2) return 2;
+        else if(tipo_casella_ = 3) return 4;
+        else return 7;
+
+    //Altrimenti se è presente un castello (=2) associo i costi del pernottamento
+    else{
+        if(tipo_casella_= 2) return 4;
+        else if(tipo_casella_= 3) return 8;
+        else return 14;
+    }
+
+    return 0; //nel caso in cui non fossero presenti costruzioni il pernottamento è uguale a 0
+}
+
+
+//Implementazione costruttori
 Box::Box(int id, int tipo){
     //Inizialmente ogni casella rappresenta un terreno acquistabile
     //Assegnamento prezzo per acquisto
@@ -74,7 +103,8 @@ void Box::print_box_info(){
 
 bool Box::build_on_box(){
     //Controllo che sulla casella non sia già presente un albergo, in tal caso non posso costruire
-    if(this->box_construction_ == 2) return false;
+    //controllo che non sia una casella laterale o la partenza
+    if(this->box_construction_ == 2||this->box_id_==0 ||this->box_id_ ==7||this->box_id_ ==14||this->box_id_ ==21) return false;
     
     //Da Terreno passo a Casa
     if(this->box_construction_ == 0){
@@ -105,41 +135,8 @@ std::string Box::construction(){
             return "Albergo";
             break;
     }
+    return "";
 
 }
 
-char Box::getBoxType(){
-    if(this->box_type_ = 0) return 'P';
-    else if(this->box_type_ = 2) return 'E';
-    else if(this->box_type_ = 3) return 'S';
-    else if(this->box_type_ = 4) return 'L';
-}
 
-//Funzioni ausiliare
-
-//Funzione per assegnare il costo ad una casella in base al tipo
-int assegnaCosto(int tipo_casella_){
-    //Se la casella è un terreno assegno i costi associati all'acquisto della casella
-        if(tipo_casella_ = 2) return 6;
-        else if(tipo_casella_= 3) return 10;
-        else if(tipo_casella_ = 4) return 20;
-        else return 0; //La casella è la partenza o è una casella angolare (quindi non acquistabili)
-}
-
-//Funzione per assegnare il costo del pernottamento in base al tipo di casella e alla struttura costruita sopra
-int assegnaPernottamento(int tipo_casella_, int costruzioni_casella_){
-        //Se nella casella è presente una casa (=1) associo i costi del pernottamento
-    if(costruzioni_casella_=1) 
-        if(tipo_casella_ = 2) return 2;
-        else if(tipo_casella_ = 3) return 4;
-        else return 7;
-
-    //Altrimenti se è presente un castello (=2) associo i costi del pernottamento
-    else{
-        if(tipo_casella_= 2) return 4;
-        else if(tipo_casella_= 3) return 8;
-        else return 14;
-    }
-
-    return 0; //nel caso in cui non fossero presenti costruzioni il pernottamento è uguale a 0
-}

@@ -23,7 +23,7 @@
 
             //Funzioni per return variabili protected
 
-            char getBoxType();
+            int getBoxType(){return this->box_type_;}
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}

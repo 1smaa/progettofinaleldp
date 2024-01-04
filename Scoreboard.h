@@ -7,7 +7,7 @@
 class Scoreboard{
     public:
         //Costruttori
-        Scoreboard();
+        Scoreboard(const std::vector<Player>& players_);
 
         Box* getBox(int id_box); 
 
@@ -17,7 +17,7 @@ class Scoreboard{
 
         //Si potrebbero utilizzare gli array visto che si conoscono le dimensioni effettive (e non venogno modificate)
         //Ma per semplicità di gestione della memoria utlizziamo gli std::vector
-        std::vector<Player*> players_; 
+        std::vector<Player> players_; 
         std::vector<Box*> board;
 };
     

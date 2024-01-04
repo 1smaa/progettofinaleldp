@@ -12,7 +12,7 @@
 #define uint unsigned int
 
 class Player{
-protected:
+private:
     // tipo di giocatore
     bool automate;
     // saldo del giocatore
@@ -31,6 +31,7 @@ protected:
     bool decide(std::string question);
     bool human_decide(std::string question);
     bool computer_decide(std::string question);
+    std::string to_coordinates(int index);
 public:
     // costruttore di default
     Player(bool automate) : automate(automate), id(0), pos(0), saldo(0), commands(this->initialize_commands()){};
@@ -51,6 +52,7 @@ public:
     uint getSaldo(){ return this->saldo; };
     // restituisce 1 (true) se la casella è in possesso del giocatore, 0 (false) altrimenti
     bool isMine(Box s);
+    std::string logConstruction();
 };
 
 #endif

@@ -20,13 +20,14 @@
             void setBoxConstruction(int construction){this->box_construction_ = construction;}
             void setBoxCost(int cost){this->box_cost_ = cost; }
             void setOwner(Player* owner){this->owner_ = owner;}
-
+            void setBoxStayCost();
             //Funzioni per return variabili protected
 
             int getBoxType(){return this->box_type_;}
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
             int getBoxCost(){return this->box_cost_;}
+            int getBoxStayCost(){return this->box_stay_cost_;}
             Player* getOwner(){return this->owner_;};
 
         //Bozza di funzioni

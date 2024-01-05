@@ -39,7 +39,7 @@ void print_testata(std::stringstream& ss){
                     <<std::setw(LARGHEZZA_CASELLA_STAMPA)<< "  8  "<<std::endl;
 }
 
-std::string string_to_print(Box* box){
+std::string string_to_print(Box* box, std::vector<Player>& player){
     
     std::string to_return;
     switch(box->getBoxType()){
@@ -71,13 +71,35 @@ std::string string_to_print(Box* box){
             to_return+="^";
             break;
     }
-    //Per avere tutte le scritte centrate
+
+    //Cerco se un giocatore è sopra la casella che sto stampando tramite un ciclo for
+    try{
+        for(int i=0; i<player.size(); i++){
+            //Se il giocatore è nella posizione = all'id della casella, lo aggiungo alla casella da stampare
+            if(player.at(i).getPos() == box->getIdBox()){
+                to_return+=player.at(i).getId();
+            }
+        }
+    }catch(std::out_of_range){
+        std::cout<<"Posizione Player - Out of Range";
+    }
+
+
+    //Per avere tutte caselle di uguale lunghezza nel caso in cui fosse presente solo un carattere tra i due delimitatori | |, aggiungo uno spazio vuoto
     if(to_return.length()==2) to_return = "| "+to_return+"|"; 
+
     else{
         to_return = "|"+to_return+"|";
     }
     return to_return;
 }
+
+void print_blank_space(std::stringstream& ss){
+    for(int i=0; i<6; i++){
+        ss <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"";
+     }
+}
+
 
 //Costruttore 
 Scoreboard::Scoreboard(const std::vector<Player>& players_){
@@ -144,6 +166,7 @@ std::string Scoreboard::print_scoreboard(){
     
     //Creo uno string stream così da poter formattare la stringa di output
     std::stringstream stream_string; 
+
     try{
         //Prima riga di stampa (coordinate numeriche)
         print_testata(stream_string);
@@ -155,61 +178,62 @@ std::string Scoreboard::print_scoreboard(){
                 stream_string<<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|   |";
             }
             else{
-                //Ricavo il tipo di casella, PARTENZA, ECONOMICA, STANDARD, LUSSO
-                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i));
+                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i), this->players_)<<std::endl;
             }
-        }
-        stream_string <<std::endl;
-        
+        }        
         
         //Seconda riga del tabellone
         stream_string <<"B";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(13));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(21))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(13), this->players_);
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(21),this->players_)<<std::endl;
 
         
         //Terza riga del tabellone
         stream_string <<"C";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(12));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ')<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(22))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(12),this->players_);
+
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(22), this->players_)<<std::endl;
 
         //Quarta riga del tabellone
         stream_string <<"D";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(11));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ')<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(24))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(11), this->players_);
+
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(24), this->players_)<<std::endl;
 
         //Quinta riga del tabellone
         stream_string <<"E";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(10));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ')<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(25))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(10),this->players_);
+        
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+        
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(25),this->players_)<<std::endl;
 
         //Sesta riga del tabellone
         stream_string <<"F";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(9));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ')<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(26))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(9),this->players_);
+        
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+        
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(26),this->players_)<<std::endl;
 
         //Settima riga del tabellone
         stream_string<<"G";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(8));
-        for(int i=0; i<6; i++){
-            stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<std::setfill(' ')<<"";
-        }
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(27))<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(8),this->players_);
+        
+        //stampo gli spazi bianchi all'interno del tabellone
+        print_blank_space(stream_string);
+        
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(27),this->players_)<<std::endl;
 
         //Ottava riga del tabellone
         stream_string<<"H";
@@ -219,13 +243,13 @@ std::string Scoreboard::print_scoreboard(){
             }
             else{
                 //Ricavo il tipo di casella, PARTENZA, ECONOMICA, STANDARD, LUSSO
-                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i));
+                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i),this->players_);
             }
         }
         
         stream_string<<std::endl;
-    }catch(std::out_of_range){
-        std::cout<<"ERRORE"<<std::endl;
+    }catch(std::out_of_range){ //catch per evitare che si vada fuori dall'array con gli indici
+        std::cout<<"Scoreboard - Out of Range";
     }
     return stream_string.str();
 }
@@ -237,4 +261,15 @@ Box* Scoreboard::getBox(int id_box){
         throw std::invalid_argument("Valore casella non valido!");
     }
 
+}
+
+void Scoreboard::print_player_costruction(){
+    //Ricavo le costruzioni di ogni giocatore dalla apposita funzione presente nella classe Player
+    try{
+        for(int i=0; i<this->players_.size();i++){
+            std::cout<<"Giocatore "<<std::to_string(i+1)<<players_.at(i).logConstruction()<<std::endl;
+        }
+    }catch(std::out_of_range){
+        std::cout<<"Player - Costruzioni: Out of Range";
+    }
 }

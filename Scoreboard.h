@@ -12,6 +12,8 @@ class Scoreboard{
         Box* getBox(int id_box); 
 
         std::string print_scoreboard();
+
+        void print_player_costruction();
             
     protected:
 

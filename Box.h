@@ -3,16 +3,10 @@
 #include "Player.h"
 
     class Box{
-
         public:
-            
             //Costruttori    
-            Box(int id, int tipo) : box_id_(id), box_type_(tipo), box_construction_(0), box_stay_cost_(0),owner_{nullptr}{}
-            Box(int id, int tipo, int costruzioni) : box_id_(id), box_type_(tipo), box_construction_(costruzioni), owner_{nullptr}{}
-
-            //Costruttori di copia e spostamento
-            //Box(const Box&) = delete;
-
+            Box(int id, int tipo);
+            Box(int id, int tipo, int costruzioni);
 
             //Funzioni per settare le variabili protected
             void setBoxType(int type){this->box_type_ = type; }
@@ -21,8 +15,8 @@
             void setBoxCost(int cost){this->box_cost_ = cost; }
             void setOwner(Player* owner){this->owner_ = owner;}
             void setBoxStayCost();
-            //Funzioni per return variabili protected
 
+            //Funzioni per return variabili protected
             int getBoxType(){return this->box_type_;}
             int getIdBox(){return this->box_id_;}
             int getBoxConstruction(){return this-> box_construction_;}
@@ -30,14 +24,17 @@
             int getBoxStayCost(){return this->box_stay_cost_;}
             Player* getOwner(){return this->owner_;};
 
-        //Bozza di funzioni
-            void print_box_info(); //Stampa le informazioni della casella
+            //Funzioni
+            
+            //Stampa a schermo informazioni generali della casella
+            void print_box_info();
 
-            bool build_on_box(); //Costruisce su una casella e ritorna un valore booleano
+            //Costruisce su una casella senza effettuare controlli (poiché già effettuati nella classe player), ritorna un valore booleano per identificare
+            //la buona riuscita
+            bool build_on_box();
 
-            int pernottamento(){return this->box_stay_cost_;}   //Ritorna il costo del pernottamento
-
-            std::string construction(); //Ritorna le costruzioni presenti sulla casella
+            //Ritorna le costruzioni presenti sulla casella
+            std::string construction();
 
         protected:
             //Definisce il tipo di casella: Economica, Standard, Lusso

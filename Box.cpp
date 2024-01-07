@@ -49,10 +49,10 @@ Definisco le diverse variabili qui così che, se si volessero cambiare per modif
 #define PERNOTTAMENTO_ALBERGO_STANDARD 8
 #define PERNOTTAMENTO_ALBERGO_LUSSO 14
 
-//Funzioni ausiliare
+//Funzioni ausiliare private
 
 //Funzione per assegnare il costo ad una casella in base al tipo
-int assegnaCosto(int& tipo_casella_){
+int Box::assegnaCosto(int& tipo_casella_){
     //Se la casella è un terreno assegno i costi associati all'acquisto della casella
     if(tipo_casella_ = CASELLA_ECONOMICA) return ACQUISTO_ECONOMICA;
     else if(tipo_casella_= CASELLA_STANDARD) return ACQUISTO_STANDARD;

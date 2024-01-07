@@ -54,6 +54,9 @@
 
             //Indica il possessore della casella.
             Player* owner_; 
+
+        private:
+            int assegnaCosto(int& tipo_casella_);
     };
 
 

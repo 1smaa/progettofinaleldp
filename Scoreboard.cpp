@@ -27,7 +27,7 @@
 
 #define LARGHEZZA_CASELLA_STAMPA 10
 
-void print_testata(std::stringstream& ss){
+void Scoreboard::print_testata(std::stringstream& ss){
             ss     <<"0"
                     <<std::setw(LARGHEZZA_CASELLA_STAMPA)<< "  1  "
                     <<std::setw(LARGHEZZA_CASELLA_STAMPA)<< "  2  "
@@ -39,7 +39,7 @@ void print_testata(std::stringstream& ss){
                     <<std::setw(LARGHEZZA_CASELLA_STAMPA)<< "  8  "<<std::endl;
 }
 
-std::string string_to_print(Box* box, std::vector<Player>& player){
+std::string Scoreboard::string_to_print(Box* box, std::vector<Player>& player){
     
     std::string to_return;
     switch(box->getBoxType()){
@@ -94,7 +94,7 @@ std::string string_to_print(Box* box, std::vector<Player>& player){
     return to_return;
 }
 
-void print_blank_space(std::stringstream& ss){
+void Scoreboard::print_blank_space(std::stringstream& ss){
     for(int i=0; i<6; i++){
         ss <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"";
      }

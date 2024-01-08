@@ -135,7 +135,6 @@ Scoreboard::Scoreboard(const std::vector<Player>& players_){
                 Se dovesse succedere, senza il controllo con il valore booleano, l'iterazione del for si concluderebbe 
                 ma nel vector non verrebbe aggiunto alcun valore.
             */
-
             bool aggiunto = false; 
             while(!aggiunto){ 
                 random_number=(rand()%3); //Genero un numero random tra 0,1,2 
@@ -145,13 +144,13 @@ Scoreboard::Scoreboard(const std::vector<Player>& players_){
                     board.push_back(b); //Aggiungo la casella al tabellone
                     aggiunto = true;
                 }
-                if(random_number==RANDOM_CASELLA_S && totCaselleStandard<NUMERO_CASELLE_STANDARD){
+                else if(random_number==RANDOM_CASELLA_S && totCaselleStandard<NUMERO_CASELLE_STANDARD){
                     Box* b = new Box(i, CASELLA_S); //Creo la casella Standard
                     totCaselleStandard++; //Incremento il numero di caselle standard create
                     board.push_back(b); //Aggiungo la casella al tabellone
                     aggiunto = true;
                 }
-                if(random_number==RANDOM_CASELLA_L && totCaselleLusso<NUMERO_CASELLE_LUSSO){
+                else if(random_number==RANDOM_CASELLA_L && totCaselleLusso<NUMERO_CASELLE_LUSSO){
                     Box* b = new Box(i, CASELLA_L); //Creo la casella Lusso
                     totCaselleLusso++; //Incremento il numero di caselle lusso create
                     board.push_back(b); //Aggiungo la casella al tabellone

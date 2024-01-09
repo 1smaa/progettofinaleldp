@@ -54,28 +54,28 @@ Definisco le diverse variabili qui così che, se si volessero cambiare per modif
 //Funzione per assegnare il costo ad una casella in base al tipo
 int Board::Box::assegnaCosto(int& tipo_casella_){
     //Se la casella è un terreno assegno i costi associati all'acquisto della casella
-    if(tipo_casella_ = CASELLA_ECONOMICA) return ACQUISTO_ECONOMICA;
-    else if(tipo_casella_= CASELLA_STANDARD) return ACQUISTO_STANDARD;
-    else if(tipo_casella_ = CASELLA_LUSSO) return ACQUISTO_LUSSO;
+    if(tipo_casella_ == CASELLA_ECONOMICA) return ACQUISTO_ECONOMICA;
+    else if(tipo_casella_ == CASELLA_STANDARD) return ACQUISTO_STANDARD;
+    else if(tipo_casella_ == CASELLA_LUSSO) return ACQUISTO_LUSSO;
     else return 0; //La casella è la partenza o è una casella angolare (quindi non acquistabili)
 }
 
 //Funzione per assegnare il costo del pernottamento in base al tipo di casella e alla struttura costruita sopra
 void Board::Box::setBoxStayCost(){
     //Se nella casella è presente una casa (=1) associo i costi del pernottamento
-    if(this->box_construction_= COSTRUZIONE_CASA) 
+    if(this->box_construction_== COSTRUZIONE_CASA) {
         if(this->box_type_= CASELLA_ECONOMICA) this->box_stay_cost_= PERNOTTAMENTO_CASA_ECONOMICA;
         else if(this->box_type_ = CASELLA_STANDARD) this->box_stay_cost_ =PERNOTTAMENTO_CASA_STANDARD;
         else this->box_stay_cost_= PERNOTTAMENTO_CASA_LUSSO;
-
-    //Altrimenti se è presente un castello (=2) associo i costi del pernottamento
-    else{
-        if(this->box_type_= CASELLA_ECONOMICA) this->box_stay_cost_= PERNOTTAMENTO_ALBERGO_ECONOMICA;
-        else if(this->box_type_= CASELLA_STANDARD) this->box_stay_cost_= PERNOTTAMENTO_ALBERGO_ECONOMICA;
-        else this->box_stay_cost_ = PERNOTTAMENTO_ALBERGO_LUSSO;
     }
-
-    this->box_stay_cost_ = 0; //nel caso in cui non fossero presenti costruzioni il pernottamento è uguale a 0
+    //Altrimenti se è presente un castello (=2) associo i costi del pernottamento
+    else if(this->box_construction_==COSTRUZIONE_ALBERGO){
+        if(this->box_type_== CASELLA_ECONOMICA) this->box_stay_cost_= PERNOTTAMENTO_ALBERGO_ECONOMICA;
+        else if(this->box_type_== CASELLA_STANDARD) this->box_stay_cost_= PERNOTTAMENTO_ALBERGO_ECONOMICA;
+        else this->box_stay_cost_= PERNOTTAMENTO_ALBERGO_LUSSO;
+    } else {
+        this->box_stay_cost_ = 0; //nel caso in cui non fossero presenti costruzioni il pernottamento è uguale a 0
+    }
 }
 
 

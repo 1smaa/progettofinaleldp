@@ -9,10 +9,10 @@
 
 int main(void){
     std::vector<Board::Player*> giocatori{};
-    for(int i=0;i<3;i++){
+    for(int i=0;i<4;i++){
         giocatori.push_back(new Board::Player(true,i,DEFAULT_SALDO));
     }
-    giocatori.push_back(new Board::Player(false,3,DEFAULT_SALDO));
+    //giocatori.push_back(new Board::Player(false,3,DEFAULT_SALDO));
     Board::Board tabellone(giocatori);
     Partita p(giocatori,&tabellone);
     int t=p.inizia();

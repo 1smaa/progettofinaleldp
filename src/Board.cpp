@@ -105,28 +105,23 @@ void Board::Board::print_blank_space(std::stringstream& ss){
 //Costruttore 
 Board::Board::Board(std::vector<Player*>& players_){
     this->players_ = players_;
-    //Riservo lo spazio necessario per le 28 caselle
-    this->board.reserve(NUMERO_CASELLE); 
     //Variabili utili per la creazione random delle caselle laterali
     int totCaselleEconomiche=0;
     int totCaselleStandard=0;
     int totCaselleLusso=0;
-    int random_number=0;
+    int random_number=1;
     //Inizializzazione generatore casuale di numeri
     std::srand(std::time(NULL)); 
     //Creo le caselle da aggiungere al tabellone
     for(int i=0;i<NUMERO_CASELLE;i++){
         if(i==0){
-            //Casella di partenza
-            Box* b=new Box(i, 0);
+            //Casella di partenza;
             //Aggiungo la casella di partenza al vector
-            board.push_back(b);
+            this->board.push_back(new Box(i, 0));
         }
         else if(i==7||i==14||i==21){ //Si tratta di una casella angolare in uno di questi casi
-            //Creo le tre caselle angolari
-            Box* b = new Box(i, 1);
             //Le aggiungo al vector
-            board.push_back(b);
+            this->board.push_back(new Box(i, 1));
         }
         //Altrimenti si tratta di una casella laterale, quindi le genero casualmente
         else{
@@ -136,25 +131,20 @@ Board::Board::Board(std::vector<Player*>& players_){
                 Se dovesse succedere, senza il controllo con il valore booleano, l'iterazione del for si concluderebbe 
                 ma nel vector non verrebbe aggiunto alcun valore.
             */
-            bool aggiunto = false; 
-            while(!aggiunto){ 
-                random_number=(rand()%3); //Genero un numero random tra 0,1,2 
-                if(random_number==RANDOM_CASELLA_E && totCaselleEconomiche<NUMERO_CASELLE_ECONOMICHE){
-                    Box* b = new Box(i, CASELLA_E); //Creo la casella economica
-                    totCaselleEconomiche++; //Incremento il numero di caselle economiche create
-                    board.push_back(b); //Aggiungo la casella al tabellone
+            bool aggiunto = false;
+            while (!aggiunto) {
+                random_number = (rand() % 3); // Generates a random number between 0, 1, 2
+                if (random_number == RANDOM_CASELLA_E && totCaselleEconomiche < NUMERO_CASELLE_ECONOMICHE) {
+                    totCaselleEconomiche++;
+                    this->board.push_back(new Box(i, CASELLA_E));
                     aggiunto = true;
-                }
-                else if(random_number==RANDOM_CASELLA_S && totCaselleStandard<NUMERO_CASELLE_STANDARD){
-                    Box* b = new Box(i, CASELLA_S); //Creo la casella Standard
-                    totCaselleStandard++; //Incremento il numero di caselle standard create
-                    board.push_back(b); //Aggiungo la casella al tabellone
+                } else if (random_number == RANDOM_CASELLA_S && totCaselleStandard < NUMERO_CASELLE_STANDARD) {
+                    totCaselleStandard++;
+                    this->board.push_back(new Box(i, CASELLA_S));
                     aggiunto = true;
-                }
-                else if(random_number==RANDOM_CASELLA_L && totCaselleLusso<NUMERO_CASELLE_LUSSO){
-                    Box* b = new Box(i, CASELLA_L); //Creo la casella Lusso
-                    totCaselleLusso++; //Incremento il numero di caselle lusso create
-                    board.push_back(b); //Aggiungo la casella al tabellone
+                } else if (random_number == RANDOM_CASELLA_L && totCaselleLusso < NUMERO_CASELLE_LUSSO) {
+                    totCaselleLusso++;
+                    this->board.push_back(new Box(i, CASELLA_L));
                     aggiunto = true;
                 }
             }
@@ -178,62 +168,62 @@ std::string Board::Board::print_board(){
                 stream_string<<std::setw(LARGHEZZA_CASELLA_STAMPA)<<"|   |";
             }
             else{
-                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i), this->players_);
+                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(i), this->players_);
             }
         }        
         
         //Seconda riga del tabellone
         stream_string <<std::endl<<"B";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(13), this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(13), this->players_);
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(21),this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(21),this->players_)<<std::endl;
 
         
         //Terza riga del tabellone
         stream_string <<"C";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(12),this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(12),this->players_);
 
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
 
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(22), this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(22), this->players_)<<std::endl;
 
         //Quarta riga del tabellone
         stream_string <<"D";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(11), this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(11), this->players_);
 
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
 
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(24), this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(24), this->players_)<<std::endl;
 
         //Quinta riga del tabellone
         stream_string <<"E";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(10),this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(10),this->players_);
         
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
         
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(25),this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(25),this->players_)<<std::endl;
 
         //Sesta riga del tabellone
         stream_string <<"F";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(9),this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(9),this->players_);
         
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
         
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(26),this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(26),this->players_)<<std::endl;
 
         //Settima riga del tabellone
         stream_string<<"G";
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(8),this->players_);
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(8),this->players_);
         
         //stampo gli spazi bianchi all'interno del tabellone
         print_blank_space(stream_string);
         
-        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(27),this->players_)<<std::endl;
+        stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(27),this->players_)<<std::endl;
 
         //Ottava riga del tabellone
         stream_string<<"H";
@@ -243,7 +233,7 @@ std::string Board::Board::print_board(){
             }
             else{
                 //Ricavo il tipo di casella, PARTENZA, ECONOMICA, STANDARD, LUSSO
-                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(board.at(i),this->players_);
+                stream_string <<std::setw(LARGHEZZA_CASELLA_STAMPA)<<string_to_print(this->board.at(i),this->players_);
             }
         }
         
@@ -256,7 +246,7 @@ std::string Board::Board::print_board(){
 
 Board::Box* Board::Board::getBox(int id_box){
     try{
-        return board.at(id_box);
+        return this->board.at(id_box);
     }catch(std::out_of_range){
         throw std::invalid_argument("Valore casella non valido!");
     }
@@ -266,7 +256,7 @@ void Board::Board::print_player_costruction(){
     //Ricavo le costruzioni di ogni giocatore dalla apposita funzione presente nella classe Player
     try{
         for(int i=0; i<this->players_.size();i++){
-            std::cout<<"Giocatore "<<std::to_string(i+1)<<players_.at(i)->logConstruction()<<std::endl;
+            std::cout<<"Giocatore "<<std::to_string(i+1)<<" "<<players_.at(i)->logConstruction()<<std::endl;
         }
     }catch(std::out_of_range){
         std::cout<<"Player - Costruzioni: Out of Range";

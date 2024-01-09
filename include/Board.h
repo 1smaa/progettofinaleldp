@@ -76,7 +76,7 @@ namespace Board{
         // id del giocatore
         uint id;
         // vector di caselle associate al giocatore
-        std::vector<Box> squares;
+        std::vector<Box*> squares;
         bool isCommand(std::string s);
         //funzione virtuale per gestire le decisioni del giocatore
         bool decide(std::string question);
@@ -87,9 +87,9 @@ namespace Board{
         // costruttore di default
         explicit Player(bool automate) : automate(automate), id(0), pos(0), saldo(0){};
         // costruttori parametrizzati
-        Player(bool automate,uint id): automate(automate),id(id), pos(0), saldo(0){};
-        Player(bool automate,uint id,int saldo): automate(automate),id(id), pos(0), saldo(saldo){};
-        Player(bool automate,uint id,int saldo,uint pos): automate(automate),id(id), pos(pos), saldo(saldo){};
+        Player(bool automate,uint id): automate(automate),id(id), pos(0), saldo(0){ srand(time(NULL)); };
+        Player(bool automate,uint id,int saldo): automate(automate),id(id), pos(0), saldo(saldo){ srand(time(NULL)); };
+        Player(bool automate,uint id,int saldo,uint pos): automate(automate),id(id), pos(pos), saldo(saldo){ srand(time(NULL)); };
         // funzione virtuale che gestisce la mossa del giocatore
         std::string move(Board s,Dadi d);
         // restituisce 1 (true) se il giocatore è ancora in gioco, 0 (false) se è stato eliminato

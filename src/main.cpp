@@ -20,6 +20,10 @@ int main(void){
         std::cout<<t<<std::endl;
         t=p.prossimoTurno();
     }
+    std::vector<Board::Player*> inPLay=tabellone.getPlayers();
+    for(int i=0;i<inPLay.size();i++){
+        std::cout<<inPLay[i]->getSaldo()<<std::endl;
+    }
     std::vector<Board::Player> vincitori=p.vincitore();
     for(int i=0;i<vincitori.size();i++){
         std::cout<<"Il giocatore "<<vincitori[i].getId()<<" ha vinto"<<std::endl;

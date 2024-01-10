@@ -77,7 +77,7 @@ int Partita::prossimoTurno(){
 
 bool Partita::terminata() const{
     //termina se rimane solo un giocatore 
-    if(this->turno>=200){
+    if(this->turno>=20000){
         return 1;
     }
     int n=0;

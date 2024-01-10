@@ -23,23 +23,19 @@
 #define ALB_LUX 10
 
 std::map<std::string,std::function<void(Board::Board& s)>> Board::COMMANDS=std::map<std::string,std::function<void(Board& s)>>{
-        {"/help", [](Board& s) {
+        {"help", [](Board& s) {
             std::cout <<"Ecco la lista dei comandi: \n";
             std::cout<<"/help: Ottieni la lista dei comandi\n";
             std::cout<<"/tabellone: Stampa il tabellone al turno corrente\n";
             std::cout<<"/costruzioni: Ottieni una lista dei giocatori e delle loro relative costruzioni ( case o alberghi )\n";
             std::cout<<"/saldo: Ottieni il saldo dei giocatori\n";
         }},
-        {"/tabellone",[](Board& s){
+        {"show",[](Board& s){
             std::cout<<s.print_board()<<std::endl;
-        }},
-        {"/costruzioni",[](Board& s){
-            s.print_player_costruction();
-        }},
-        {"/saldo",[](Board& s){
-            std::vector<Player*> p=s.getPlayers();
-            for(int i=0;i<p.size();i++){
-                std::cout<<"Il Giocatore "<<p[i]->getId()<<" ha "<<p[i]->getSaldo()<<" fiorini."<<std::endl;
+            std::cout<<s.print_player_costruction()<<std::endl;
+            std::vector<Player*> giocatori=s.getPlayers();
+            for(int i=0;i<giocatori.size();i++){
+                std::cout<<"Giocatore "<<giocatori[i]->getId()<<" ha "<<giocatori[i]->getSaldo()<<" fiorini.\n";
             }
         }}
     };
@@ -55,98 +51,73 @@ bool Board::Player::isMine(Box s){
 }
 
 bool Board::Player::isCommand(std::string s){
-    return ((s!="")&&(s[0]=='/'));
+    return COMMANDS.count(s)>0;
 }
 
-bool Board::Player::human_decide(std::string question){
+bool Board::Player::human_decide(std::string question,Board b){
     std::cout<<question<<" (Y/N)"<<std::endl;
-    char response;
+    std::string response;
     std::cin>>response;
-    return response=='Y';
+    while(this->isCommand(response)){
+        COMMANDS[response](b);
+        std::cin>>response;
+    }
+    return response=="Y";
 }
 
-bool Board::Player::computer_decide(std::string question){
+bool Board::Player::computer_decide(){
     int r=rand()%101;
     //std::cout<<r<<std::endl;
     return r<=25;
 }
 
-bool Board::Player::decide(std::string question){
+bool Board::Player::decide(std::string question,Board b){
     if(this->automate){
-        return this->computer_decide(question);
+        return this->computer_decide();
     } else {
-        return this->human_decide(question);
+        return this->human_decide(question,b);
     }
 }
-
-std::string Board::Player::to_coordinates(int index){
-    if(index<22&&index>=14){
-        return "A"+std::to_string(index-13);
-    }
-    if(index<8){
-        return "H"+std::to_string(8-index);
-    }
-    if(index<=13&&index>=8){
-        return {(char)('O'-index),'1'};
-    }
-    if(index>=22){
-        return {(char)(index+','),'8'};
-    }
-    return "";
-}
-
 std::string Board::Player::logConstruction(){
     std::string log="";
     for(int i=0;i<this->squares.size();i++){
         if(squares[i]->getBoxConstruction()!=0){
-            log+=this->to_coordinates(squares[i]->getIdBox())+",";
+            log+=this->squares[i]->getCoordinates()+",";
         }
     }
     return log.substr(0,log.length()-1);
 }
 
 std::string Board::Player::move(Board s,Dadi d){
-    if(!this->automate){ 
-        std::string input;
-        std::cin>>input;
-        while(this->isCommand(input)){
-            if(COMMANDS.count(input)){
-                COMMANDS[input](s);
-            } else {
-                break;
-            }
-            std::cin>>input;
-        }
-    }
     std::string log="";
     int t=d.lancia();
-    log+="- Il Giocatore "+std::to_string(this->id)+" ha tirato i dadi ottendendo "+std::to_string(t)+"\n";
-    std::cout<<"- Il Giocatore "+std::to_string(this->id)+" ha tirato i dadi ottendendo "+std::to_string(t)+"\n";
+    log+="- Giocatore "+std::to_string(this->id)+" ha tirato i dadi ottendendo un valore di "+std::to_string(t)+"\n";
     this->pos+=t;
     bool startP=false;
     if(this->pos>=N_CASELLE){
         startP=true;
         this->pos-=N_CASELLE;
         this->saldo+=VIA;
+        log+="- Giocatore "+std::to_string(this->id)+" è passato dal via e ha ritirato 20 fiorini\n";
     }
     Box* arrivalBox=s.getBox(this->pos);
-    log+="- Il Giocatore "+std::to_string(this->id)+" è arrivato alla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+    log+="- Giocatore "+std::to_string(this->id)+" è arrivato alla casella "+arrivalBox->getCoordinates()+"\n";
     if(arrivalBox->getOwner()!=NO_PLAYER&&arrivalBox->getOwner()->getId()==this->id){
         switch(arrivalBox->getBoxType()){
             case ECON:
                 switch(arrivalBox->getBoxConstruction()){
                     case 0:
-                        if(this->saldo>=CASA_ECON&&this->decide("Acquistare una casa? ")){
+                        if(this->saldo>=CASA_ECON&&this->decide("Acquistare una casa? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=CASA_ECON;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato una casa sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha costruito una casa sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     case 1:
-                        if(this->saldo>=ALB_ECON&&this->decide("Acquistare un albergo? ")){
+                        if(this->saldo>=ALB_ECON&&this->decide("Acquistare un albergo? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=ALB_ECON;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     default:
@@ -156,17 +127,17 @@ std::string Board::Player::move(Board s,Dadi d){
             case STD:
                 switch(arrivalBox->getBoxConstruction()){
                     case 0:
-                        if(this->saldo>=CASA_STD&&this->decide("Acquistare una casa? ")){
+                        if(this->saldo>=CASA_STD&&this->decide("Acquistare una casa? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=CASA_STD;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato una casa sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha costruito una casa sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     case 1:
-                        if(this->saldo>=ALB_STD&&this->decide("Acquistare un albergo? ")){
+                        if(this->saldo>=ALB_STD&&this->decide("Acquistare un albergo? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=ALB_STD;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     default:
@@ -176,17 +147,17 @@ std::string Board::Player::move(Board s,Dadi d){
             case LUX:
                 switch(arrivalBox->getBoxConstruction()){
                     case 0:
-                        if(this->saldo>=CASA_LUX&&this->decide("Acquistare una casa? ")){
+                        if(this->saldo>=CASA_LUX&&this->decide("Acquistare una casa? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=CASA_LUX;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato una casa sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha costruito una casa sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     case 1:
-                        if(this->saldo>=ALB_LUX&&this->decide("Acquistare un albergo? ")){
+                        if(this->saldo>=ALB_LUX&&this->decide("Acquistare un albergo? ",s)){
                             arrivalBox->build_on_box();
                             this->saldo-=ALB_LUX;
-                            log+="- Il Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sulla casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                            log+="- Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sul terreno "+arrivalBox->getCoordinates()+"\n";
                         }
                         break;
                     default:
@@ -198,26 +169,26 @@ std::string Board::Player::move(Board s,Dadi d){
     } else if(arrivalBox->getOwner()==NO_PLAYER){
         switch(arrivalBox->getBoxType()){
             case ECON:
-                if(this->saldo>=TERRENO_ECON&&this->decide("Comprare una casella economica? ")){
+                if(this->saldo>=TERRENO_ECON&&this->decide("Comprare una casella economica? ",s)){
                     arrivalBox->setOwner(this);
                     this->saldo-=TERRENO_ECON;
-                    log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                    log+="- Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+arrivalBox->getCoordinates()+"\n";
                     this->squares.push_back(arrivalBox);
                 }
                 break;
             case STD:
-                if(this->saldo>=TERRENO_STD&&this->decide("Comprare una casella standard? ")){
+                if(this->saldo>=TERRENO_STD&&this->decide("Comprare una casella standard? ",s)){
                     arrivalBox->setOwner(this);
                     this->saldo-=TERRENO_STD;
-                    log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                    log+="- Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+arrivalBox->getCoordinates()+"\n";
                     this->squares.push_back(arrivalBox);
                 }
                 break;
             case LUX:
-                if(this->saldo>=TERRENO_LUX&&this->decide("Comprare una casella lusso? ")){
+                if(this->saldo>=TERRENO_LUX&&this->decide("Comprare una casella lusso? ",s)){
                     arrivalBox->setOwner(this);
                     this->saldo-=TERRENO_LUX;
-                    log+="- Il Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+                    log+="- Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+arrivalBox->getCoordinates()+"\n";
                     this->squares.push_back(arrivalBox);
                 }
                 break;
@@ -225,12 +196,17 @@ std::string Board::Player::move(Board s,Dadi d){
                 break;
         }
     } else {
-        log+="- Il Giocatore "+std::to_string(this->id)+" ha pagato "+std::to_string(arrivalBox->getBoxStayCost())+" fiorini al Giocatore "+std::to_string(arrivalBox->getOwner()->getId())+" per il pernottamento nella casella "+this->to_coordinates(arrivalBox->getIdBox())+"\n";
+        log+="- Giocatore "+std::to_string(this->id)+" ha pagato "+std::to_string(arrivalBox->getBoxStayCost())+" fiorini a giocatore "+std::to_string(arrivalBox->getOwner()->getId())+" per pernottamento nella casella "+arrivalBox->getCoordinates()+"\n";
         arrivalBox->getOwner()->modifySaldo(std::min(this->saldo,arrivalBox->getBoxStayCost()));
         this->saldo-=arrivalBox->getBoxStayCost();
         if(this->saldo<0){
-            log+="- Il Giocatore "+std::to_string(this->id)+" è  stato eliminato.";
+            log+="- Giocatore "+std::to_string(this->id)+" è  stato eliminato.";
+            for(int i=0;i<this->squares.size();i++){
+                this->squares[i]->setOwner(nullptr);
+                this->squares[i]->setBoxConstruction(0);
+            }
         }
     }
+    log+="- Giocatore "+std::to_string(this->id)+" ha finito il turno.\n";
     return log;
 }

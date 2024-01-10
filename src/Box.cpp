@@ -83,6 +83,7 @@ void Board::Box::setBoxStayCost(){
 Board::Box::Box(int id, int tipo): box_id_(id), box_type_(tipo), box_construction_(0), box_stay_cost_(0),owner_{nullptr}{
     //Inizialmente ogni casella rappresenta un terreno acquistabile quindi utilizzo la funzione per assegnare il prezzo per l'acquisto iniziale
     this-> box_cost_ = assegnaCosto(this->box_type_);
+    this->coordinates= this->to_coordinates();
 }
 
 Board::Box::Box(int id, int tipo, int costruzioni): box_id_(id), box_type_(tipo), box_construction_(costruzioni), owner_{nullptr}{
@@ -90,6 +91,7 @@ Board::Box::Box(int id, int tipo, int costruzioni): box_id_(id), box_type_(tipo)
     this->box_cost_ = assegnaCosto(this->box_type_);
     //Tramite la funzione per assegnare il costo del pernottamento controllo se sono presenti costruzioni e, in caso, assegno il costo del pernottamento
     this->setBoxStayCost();
+    this->coordinates=this->to_coordinates();
 }
 
 
@@ -156,6 +158,23 @@ bool Board::Box::build_on_box(){
     }
     return false; //Nel caso in cui non venisse costruito viene ritornato false di default
 }
+
+std::string Board::Box::to_coordinates(){
+    if(this->box_id_<22&&this->box_id_>=14){
+        return "A"+std::to_string(this->box_id_-13);
+    }
+    if(this->box_id_<8){
+        return "H"+std::to_string(8-this->box_id_);
+    }
+    if(this->box_id_<=13&&this->box_id_>=8){
+        return {(char)('O'-this->box_id_),'1'};
+    }
+    if(this->box_id_>=22){
+        return {(char)(this->box_id_+','),'8'};
+    }
+    return "";
+}
+
 
 
 //Funzione che restituisce il tipo di costruzione presente sulla casella

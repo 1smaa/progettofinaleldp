@@ -252,13 +252,11 @@ Board::Box* Board::Board::getBox(int id_box){
     }
 }
 
-void Board::Board::print_player_costruction(){
+std::string Board::Board::print_player_costruction(){
     //Ricavo le costruzioni di ogni giocatore dalla apposita funzione presente nella classe Player
-    try{
-        for(int i=0; i<this->players_.size();i++){
-            std::cout<<"Giocatore "<<std::to_string(i+1)<<" "<<players_.at(i)->logConstruction()<<std::endl;
-        }
-    }catch(std::out_of_range){
-        std::cout<<"Player - Costruzioni: Out of Range";
+    std::string log="";
+    for(int i=0; i<this->players_.size();i++){
+       log+="Giocatore "+std::to_string(i+1)+" "+players_.at(i)->logConstruction()+"\n";
     }
+    return log;
 }

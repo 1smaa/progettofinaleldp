@@ -44,8 +44,11 @@ namespace Board{
         //Ritorna le costruzioni presenti sulla casella
         std::string construction();
 
+        std::string getCoordinates(){ return this->coordinates; };
+
     private:
         int assegnaCosto(int& tipo_casella_);
+        std::string to_coordinates();
         //Definisce il tipo di casella: Economica, Standard, Lusso
         int box_type_;
 
@@ -63,6 +66,8 @@ namespace Board{
 
         //Indica il possessore della casella.
         Player* owner_; 
+
+        std::string coordinates;
     };
     class Board;
     class Player{
@@ -79,10 +84,9 @@ namespace Board{
         std::vector<Box*> squares;
         bool isCommand(std::string s);
         //funzione virtuale per gestire le decisioni del giocatore
-        bool decide(std::string question);
-        bool human_decide(std::string question);
-        bool computer_decide(std::string question);
-        std::string to_coordinates(int index);
+        bool decide(std::string question,Board b);
+        bool human_decide(std::string question,Board b);
+        bool computer_decide();
     public:
         // costruttore di default
         explicit Player(bool automate) : automate(automate), id(0), pos(0), saldo(0){};
@@ -116,7 +120,7 @@ namespace Board{
         std::string print_board();
         std::vector<Player*> getPlayers() { return this->players_; }
 
-        void print_player_costruction();
+        std::string print_player_costruction();
            
     private:
         std::vector<Player*> players_; 

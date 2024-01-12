@@ -5,6 +5,9 @@
 #include <iomanip>
 #include <vector>
 
+/*
+*   AMBROSO PIERLORENZO
+*/
 
 //Numero totale di caselle nel tabellone
 #define NUMERO_CASELLE 28
@@ -148,11 +151,12 @@ Board::Board::Board(std::vector<Player*>& players_){
                     aggiunto = true;
                 }
             }
+            if(i==22){ std::cout<<this->board[this->board.size()-1]->getBoxType()<<std::endl; }
         }
     }
 }
 
-std::string Board::Board::print_board(){
+std::string Board::Board::print_board() {
     
     //Creo uno string stream così da poter formattare la stringa di output
     std::stringstream stream_string; 
@@ -244,7 +248,7 @@ std::string Board::Board::print_board(){
     return stream_string.str();
 }
 
-Board::Box* Board::Board::getBox(int id_box){
+Board::Box* Board::Board::getBox(int id_box) const{
     try{
         return this->board.at(id_box);
     }catch(std::out_of_range){
@@ -252,7 +256,7 @@ Board::Box* Board::Board::getBox(int id_box){
     }
 }
 
-std::string Board::Board::print_player_costruction(){
+std::string Board::Board::print_player_costruction() const{
     //Ricavo le costruzioni di ogni giocatore dalla apposita funzione presente nella classe Player
     std::string log="";
     for(int i=0; i<this->players_.size();i++){

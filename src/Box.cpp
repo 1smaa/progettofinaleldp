@@ -1,5 +1,11 @@
 #include "Board.h"
 #include <iostream>
+
+/*
+*   AMBROSO PIERLORENZO
+*/
+
+
 /*
 Il tipo di casella (box_type_) è specificato da questi numeri:
 0 = Partenza
@@ -52,7 +58,7 @@ Definisco le diverse variabili qui così che, se si volessero cambiare per modif
 //Funzioni ausiliare private
 
 //Funzione per assegnare il costo ad una casella in base al tipo
-int Board::Box::assegnaCosto(int& tipo_casella_){
+int Board::Box::assegnaCosto(int tipo_casella_){
     //Se la casella è un terreno assegno i costi associati all'acquisto della casella
     if(tipo_casella_ == CASELLA_ECONOMICA) return ACQUISTO_ECONOMICA;
     else if(tipo_casella_ == CASELLA_STANDARD) return ACQUISTO_STANDARD;
@@ -96,7 +102,7 @@ Board::Box::Box(int id, int tipo, int costruzioni): box_id_(id), box_type_(tipo)
 
 
 //Funzione per la stampa delle informazioni della casella
-void Board::Box::print_box_info(){
+void Board::Box::print_box_info() const{
     //Variabili utili al fine del completamento della funzione
     std::string tipo_casella;
     std::string costruzioni_casella;
@@ -159,7 +165,7 @@ bool Board::Box::build_on_box(){
     return false; //Nel caso in cui non venisse costruito viene ritornato false di default
 }
 
-std::string Board::Box::to_coordinates(){
+std::string Board::Box::to_coordinates() const {
     if(this->box_id_<22&&this->box_id_>=14){
         return "A"+std::to_string(this->box_id_-13);
     }
@@ -178,7 +184,7 @@ std::string Board::Box::to_coordinates(){
 
 
 //Funzione che restituisce il tipo di costruzione presente sulla casella
-std::string Board::Box::construction(){
+std::string Board::Box::construction() const {
     switch(this->box_construction_){
         case COSTRUZIONE_TERRENO:
             return "Terreno";

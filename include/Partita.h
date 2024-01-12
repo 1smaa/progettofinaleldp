@@ -6,6 +6,10 @@
 #include <vector>
 #include <string>
 
+/*
+*   CIAN IRENE
+*/
+
 class Partita{
 private:
     std::vector<Board::Player*> giocatori;
@@ -25,7 +29,7 @@ public:
     int prossimoTurno();
     bool terminata() const;
     std::string log() const;
-    std::vector<Board::Player>vincitore() const;
+    std::vector<Board::Player*>vincitore() const;
 
 };
 #endif

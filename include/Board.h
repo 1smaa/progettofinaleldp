@@ -7,6 +7,10 @@
 #include <functional>
 #include "Dadi.h"
 
+/*
+*   LORENZON ISMAELE
+*/
+
 using uint = unsigned int;
 namespace Board{
     class Player;
@@ -25,30 +29,30 @@ namespace Board{
         void setBoxStayCost();
 
         //Funzioni per return variabili protected
-        int getBoxType(){return this->box_type_;}
-        int getIdBox(){return this->box_id_;}
-        int getBoxConstruction(){return this-> box_construction_;}
-        int getBoxCost(){return this->box_cost_;}
-        int getBoxStayCost(){return this->box_stay_cost_;}
-        Player* getOwner(){return this->owner_;};
+        int getBoxType() const { return this->box_type_; }
+        int getIdBox() const { return this->box_id_; }
+        int getBoxConstruction() const { return this-> box_construction_; }
+        int getBoxCost() const { return this->box_cost_; }
+        int getBoxStayCost() const { return this->box_stay_cost_; }
+        Player* getOwner() const { return this->owner_; }
+        std::string getCoordinates() const { return this->coordinates; };
 
         //Funzioni
         
         //Stampa a schermo informazioni generali della casella
-        void print_box_info();
+        void print_box_info() const;
 
         //Costruisce su una casella senza effettuare controlli (poiché già effettuati nella classe player), ritorna un valore booleano per identificare
         //la buona riuscita
         bool build_on_box();
 
         //Ritorna le costruzioni presenti sulla casella
-        std::string construction();
+        std::string construction() const ;
 
-        std::string getCoordinates(){ return this->coordinates; };
 
     private:
-        int assegnaCosto(int& tipo_casella_);
-        std::string to_coordinates();
+        int assegnaCosto(int tipo_casella_);
+        std::string to_coordinates() const;
         //Definisce il tipo di casella: Economica, Standard, Lusso
         int box_type_;
 
@@ -71,9 +75,7 @@ namespace Board{
     };
     class Board;
     class Player{
-    private:
-        // tipo di giocatore
-        bool automate;
+    protected:
         // saldo del giocatore
         int saldo;
         // posizione del giocatore
@@ -82,20 +84,25 @@ namespace Board{
         uint id;
         // vector di caselle associate al giocatore
         std::vector<Box*> squares;
+        std::map<int,std::vector<int>> costs;
         bool isCommand(std::string s);
+        std::map<int,std::vector<int>> initialize_costs() const;
+        std::string processBuy(Board& board,Box* box);
+        std::string processBuild(Board& board,Box* box);
+        std::string processStay(Board& board,Box* box);
         //funzione virtuale per gestire le decisioni del giocatore
-        bool decide(std::string question,Board b);
-        bool human_decide(std::string question,Board b);
-        bool computer_decide();
+        virtual bool decide(std::string& question,Board& b) = 0;
+        void log(std::string& log,std::string s);
     public:
-        // costruttore di default
-        explicit Player(bool automate) : automate(automate), id(0), pos(0), saldo(0){};
         // costruttori parametrizzati
-        Player(bool automate,uint id): automate(automate),id(id), pos(0), saldo(0){ srand(time(NULL)); };
-        Player(bool automate,uint id,int saldo): automate(automate),id(id), pos(0), saldo(saldo){ srand(time(NULL)); };
-        Player(bool automate,uint id,int saldo,uint pos): automate(automate),id(id), pos(pos), saldo(saldo){ srand(time(NULL)); };
+        explicit Player(uint id): id(id), pos(0), saldo(0), costs(initialize_costs()) { srand(time(NULL)); };
+        Player(uint id,int saldo): id(id), pos(0), saldo(saldo), costs(initialize_costs()) { srand(time(NULL)); };
+        Player(uint id,int saldo,uint pos): id(id), pos(pos), saldo(saldo), costs(initialize_costs()) { srand(time(NULL)); };
+        // cancellazione costruttori di copia per ovviare a problemi di slicing
+        Player(const Player&) = delete;
+        Player& operator=(const Player&) = delete;
         // funzione virtuale che gestisce la mossa del giocatore
-        std::string move(Board s,Dadi d);
+        std::string move(Board& s,Dadi& d);
         // restituisce 1 (true) se il giocatore è ancora in gioco, 0 (false) se è stato eliminato
         bool inPlay() const { return this->saldo>=0; };
         // funzioni per settare le variabili del player
@@ -106,21 +113,39 @@ namespace Board{
         uint getPos() const { return this->pos; };
         uint getSaldo() const { return this->saldo; };
         // restituisce 1 (true) se la casella è in possesso del giocatore, 0 (false) altrimenti
-        bool isMine(Box s);
+        bool isMine(Box& s) const;
         std::string logConstruction();
+        virtual ~Player(){};
+    };
+    class Computer : public Player{
+    private:
+        bool decide(std::string& question,Board& b) override;
+    public:
+        Computer(uint id) : Player(id){};
+        Computer(uint id,int saldo) : Player(id,saldo){};
+        Computer(uint id,int saldo,uint pos): Player(id,saldo,pos){};
+    };
+    class Human : public Player{
+    private:
+        bool decide(std::string& question,Board& b) override;
+    public:
+        Human(uint id) : Player(id){};
+        Human(uint id,int saldo) : Player(id,saldo){};
+        Human(uint id,int saldo,uint pos): Player(id,saldo,pos){};
     };
     class Board{
     public:
-        //Costruttori
+        //Costruttore di default
         Board() : players_(std::vector<Player*>{}), board(std::vector<Box*>{}){};
+        //Costruttore parametrizzato
         Board(std::vector<Player*>& players_);
 
-        Box* getBox(int id_box); 
+        Box* getBox(int id_box) const; 
 
         std::string print_board();
-        std::vector<Player*> getPlayers() { return this->players_; }
+        std::vector<Player*> getPlayers() const { return this->players_; }
 
-        std::string print_player_costruction();
+        std::string print_player_costruction() const;
            
     private:
         std::vector<Player*> players_; 

@@ -1,6 +1,9 @@
 #include <iostream>
 #include <algorithm>
 #include "Partita.h"
+/*
+*   CIAN IRENE
+*/
 //COSTRUTTORI
 Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone){
     this-> giocatori = giocatori;
@@ -25,41 +28,44 @@ int Partita::inizia(){
     //assegno ad ogni giocatore un lancio casuale
     std::vector<std::pair<Board::Player*, int>> lanciDado; //coppie (giocatore, numero dado)
     for (int i =0; i< giocatori.size(); i++){
-        int valoreDado =d.lancia();
-        lanciDado.push_back(std::make_pair(giocatori[i], valoreDado)); // aggiungo un elemento alla fine del vettore
+        lanciDado.push_back(std::make_pair(giocatori[i], 0)); // aggiungo un elemento alla fine del vettore
     }
-    
-    //ordino i giocatori (decrescente)
-    std::sort (lanciDado.begin(), lanciDado.end(),[](const auto& a, const auto& b){
-        return a.second> b.second;
-    });
-
     //casi di pareggio
-    for(int i =0; i< lanciDado.size()-1; i++){
-        while (lanciDado[i].second== lanciDado[i+1].second){
-            //ritiriamo il dado
-            lanciDado[i].second= d.lancia();
-            lanciDado[i+1].second= d.lancia();
+    std::vector<std::pair<int,int>> unsorted{std::make_pair(0,lanciDado.size())};
+    do{
+        std::cout<<std::endl;
+        std::vector<std::pair<int,int>> newunsort{};
+        for(int i=0;i<unsorted.size();i++){
+            for(int j=unsorted[i].first;j<unsorted[i].second;j++){
+                int t=d.lancia();
+                this->s+="- Giocatore "+std::to_string(giocatori[j]->getId())+" ha lanciato "+std::to_string(t)+".\n";
+                lanciDado[j].second=t;
+            }
+            std::sort(lanciDado.begin()+unsorted[i].first,lanciDado.begin()+unsorted[i].second,[](const auto& a,const auto& b){
+                return a.second>b.second;
+            });
+            for(int j=unsorted[i].first;j<unsorted[i].second-1;j++){
+                int start=j;
+                int end=j;
+                while(j+1<unsorted[i].second&&lanciDado[j].second==lanciDado[j+1].second){
+                    end++;
+                    j++;
+                }
+                if(end-start){
+                    newunsort.push_back(std::pair<int,int>{start,end+1});
+                }
+            }
         }
-    } 
+        unsorted=newunsort;
+    }while(unsorted.size());
 
-    //riordino 
-    std::sort(lanciDado.begin(), lanciDado.end(),[](const auto& a, const auto& b){
-        return a.second> b.second;
-    });
-
-    //riordino i giocatori (decrescente)
-    std::vector<Board::Player*> ordineGiocatori;
-    for (const auto& risultato: lanciDado){
-        ordineGiocatori.push_back(risultato.first);
+    for(int i=0;i<lanciDado.size();i++){
+        this->giocatori[i]=lanciDado[i].first;
     }
-    giocatori= ordineGiocatori;
-
     //stampo l'ordine di partenza
-    for(int i=0; i<giocatori.size(); i++){
-        std::cout<< "Giocatore "<<giocatori[i]->getId()<<" ha lanciato "<<lanciDado[i].second<<std::endl;
-    }
+    std::cout<<this->s<<std::endl;
     //Id giocatore al primo turno
+    this->prossimoGiocatore=-1;
     return giocatori[0]->getId();
 }
 
@@ -70,14 +76,13 @@ int Partita::prossimoTurno(){
         prossimoGiocatore=(prossimoGiocatore+1)%4;
     }
     std::string log=this->giocatori[prossimoGiocatore]->move(*this->tabellone,this->d); // move fa giocare tutto il turno al prossimo giocatore
-    std::cout<<log<<std::endl;
     this->s+=log;
     return turno;
 }
 
 bool Partita::terminata() const{
     //termina se rimane solo un giocatore 
-    if(this->turno>=20000){
+    if(this->turno>=200){
         return 1;
     }
     int n=0;
@@ -94,18 +99,18 @@ std::string Partita::log() const{
     return s;
 }
 
-std::vector<Board::Player> Partita::vincitore()const{
+std::vector<Board::Player*> Partita::vincitore()const{
     //vince l'ultimo che rimane
-    std::vector<Board::Player> vincitori{};
+    std::vector<Board::Player*> vincitori{};
     int saldoMax=0;
     for(int i=0;i<this->giocatori.size();i++){
         if(this->giocatori[i]->inPlay()){
             int saldo=this->giocatori[i]->getSaldo();
             if(saldoMax<saldo){
                 saldoMax=saldo;
-                vincitori=std::vector<Board::Player>{*this->giocatori[i]};
+                vincitori=std::vector<Board::Player*>{this->giocatori[i]};
             } else if(saldoMax==saldo){
-                vincitori.push_back(*this->giocatori[i]);
+                vincitori.push_back(this->giocatori[i]);
             }
         }
     }

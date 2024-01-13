@@ -5,13 +5,20 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <ctime>
+#include <cstring>
+#include <sstream>
+#include <iomanip>
+#include <stdexcept>
 #include "Dadi.h"
+#include "BoardExceptions.h"
 
 /*
 *   LORENZON ISMAELE
 */
 
 using uint = unsigned int;
+
 namespace Board{
     class Player;
     class Box{
@@ -97,7 +104,12 @@ namespace Board{
         // costruttori parametrizzati
         explicit Player(uint id): id(id), pos(0), saldo(0), costs(initialize_costs()) { srand(time(NULL)); };
         Player(uint id,int saldo): id(id), pos(0), saldo(saldo), costs(initialize_costs()) { srand(time(NULL)); };
-        Player(uint id,int saldo,uint pos): id(id), pos(pos), saldo(saldo), costs(initialize_costs()) { srand(time(NULL)); };
+        Player(uint id,int saldo,uint pos): id(id), pos(pos), saldo(saldo), costs(initialize_costs()) { 
+            srand(time(NULL));
+            if(this->pos<0||this->pos>27){
+                throw PositionError(this->pos); 
+            }
+        };
         // cancellazione costruttori di copia per ovviare a problemi di slicing
         Player(const Player&) = delete;
         Player& operator=(const Player&) = delete;

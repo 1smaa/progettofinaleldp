@@ -5,6 +5,8 @@
 #include "Board.h"
 #include <vector>
 #include <string>
+#include <ostream>
+#include <algorithm>
 
 /*
 *   CIAN IRENE

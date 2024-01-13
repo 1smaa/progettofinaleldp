@@ -21,7 +21,7 @@ void print_mex_error(){
 
 int main(int argc,char *argv[] ){
 
-	if(argc==1){ //Controllo che sia stato scritto qualcosa dopo il comando ./main, se viene inserita più di una parola verrà stampato il messaggio di errore
+	if(argc==2){ //Controllo che sia stato scritto qualcosa dopo il comando ./main, se viene inserita più di una parola verrà stampato il messaggio di errore
 		if(std::string(argv[1]).compare("Human")==0 || std::string(argv[1]).compare("human")==0){ //Controllo se la partita desiderata è con 3 computer e un umano
 
         //Eseguo il gioco con 3 computer e un umano
@@ -111,7 +111,7 @@ int main(int argc,char *argv[] ){
 	}
 
 	else{ //Se non è stato inserito alcun comando dopo ./main stampo un messaggio di errore
-		print_mex_error();		
+		print_mex_error();
 	}
 	return 0;
 }

@@ -1,5 +1,3 @@
-#include <iostream>
-#include <algorithm>
 #include "Partita.h"
 /*
 *   CIAN IRENE

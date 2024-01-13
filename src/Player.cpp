@@ -1,8 +1,4 @@
 #include "Board.h"
-#include <iostream>
-#include <ctime>
-#include <string>
-#include <cstring>
 /*
 *   LORENZON ISMAELE
 */
@@ -27,21 +23,27 @@
 #define ALB_STD 5
 #define ALB_LUX 10
 
-std::map<std::string,std::function<void(Board::Board& s)>> Board::COMMANDS=std::map<std::string,std::function<void(Board& s)>>{
-        {"help", [](Board& s) {
-            std::cout <<"Ecco la lista dei comandi: \n";
-            std::cout<<"show: Ottieni le informazioni riguardanti la partita.\n";
-        }},
-        {"show",[](Board& s){
-            std::cout<<s.print_board()<<std::endl;
-            std::cout<<s.print_player_costruction()<<std::endl;
-            std::vector<Player*> giocatori=s.getPlayers();
-            for(int i=0;i<giocatori.size();i++){
-                std::cout<<"Giocatore "<<giocatori[i]->getId()<<" ha "<<giocatori[i]->getSaldo()<<" fiorini.\n";
-            }
-        }}
-    };
+#define CASA 0
+#define ALBERGO 1
 
+std::map<std::string,std::function<void(Board::Board& s)>> Board::COMMANDS=std::map<std::string,std::function<void(Board& s)>>{
+    //comando help per avere informazioni sui comandi del gioco
+    {"help", [](Board& s) {
+        std::cout <<"Ecco la lista dei comandi: \n";
+        std::cout<<"show: Ottieni le informazioni riguardanti la partita.\n";
+    }},
+    //comanndo show per mostrare le informazioni sul tabellone
+    {"show",[](Board& s){
+        std::cout<<s.print_board()<<std::endl;
+        std::cout<<s.print_player_costruction()<<std::endl;
+        std::vector<Player*> giocatori=s.getPlayers();
+        for(int i=0;i<giocatori.size();i++){
+            std::cout<<"Giocatore "<<giocatori[i]->getId()<<" ha "<<giocatori[i]->getSaldo()<<" fiorini.\n";
+        }
+    }}
+};
+
+//mappa dei costi dei vari terreni
 std::map<int,std::vector<int>> Board::Player::initialize_costs() const{
     return std::map<int,std::vector<int>>{
         {ECON , std::vector<int>{TERRENO_ECON,CASA_ECON,ALB_ECON}},
@@ -50,25 +52,38 @@ std::map<int,std::vector<int>> Board::Player::initialize_costs() const{
     };
 };
 
+//funzione per processare la possibilità di acquisto di una casella
 std::string Board::Player::processBuy(Board& board,Box* box){
     std::string q="Acquistare il terreno "+box->getCoordinates()+"? ";
+    //ottieni il tipo del terreno
     int t=box->getBoxType();
+    //se il tipo di questa casella non è acquistabile restituisci un log vuoto
     if(!this->costs.count(t)){return "";}
     std::string log="";
+    //se hai un saldo disponibile e la logica di decisione restituisce 1
     if(this->saldo>=this->costs[t][0]&&this->decide(q,board)){
+        //modifica il proprietario della casella
         box->setOwner(this);
+        //aggiorna il saldo
         this->saldo-=this->costs[t][0];
+        //aggiorna il log
         log+="- Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+box->getCoordinates()+"\n";
+        //aggiungi alla propria casella
         this->squares.push_back(box);
     }
     return log;
 }
 
+//funzione per processare il pernottamento in un terreno
 std::string Board::Player::processStay(Board& board,Box* box){
     std::string log="";
+    //aggiorn il log
     log+="- Giocatore "+std::to_string(this->id)+" ha pagato "+std::to_string(box->getBoxStayCost())+" fiorini a giocatore "+std::to_string(box->getOwner()->getId())+" per pernottamento nella casella "+box->getCoordinates()+"\n";
+    //aggiorna il saldo del possessore della casella
     box->getOwner()->modifySaldo(std::min(this->saldo,box->getBoxStayCost()));
+    //aggiorna il saldo di questio giocatore
     this->saldo-=box->getBoxStayCost();
+    //se il saldo è <0 il giocatore è eliminato e le caselle vengono rimesse a disposizione
     if(this->saldo<0){
         log+="- Giocatore "+std::to_string(this->id)+" è  stato eliminato.";
         for(int i=0;i<this->squares.size();i++){
@@ -79,20 +94,25 @@ std::string Board::Player::processStay(Board& board,Box* box){
     return log;
 }
 
+//funzione per processare la possibilità di mettere costruzioni
 std::string Board::Player::processBuild(Board& board, Box* box){
     std::string log="";
     std::string qAskCasa="Acquistare una casa? ";
     std::string qAskAlbergo="Acquistare un albergo? ";
+    //ottieni il tipo della casella
     int t=box->getBoxType();
+    //separa i casi: acquisto di una casa e acquisto di un albergo
     switch(box->getBoxConstruction()){
-        case 0:
+        case CASA:
+            //logica decisionale per l'acquisto di una casa
             if(this->saldo>=this->costs[t][1]&&this->decide(qAskCasa,board)){
                 box->build_on_box();
                 this->saldo-=this->costs[t][1];
                 log+="- Giocatore "+std::to_string(this->id)+" ha costruito una casa sul terreno "+box->getCoordinates()+"\n";
             }
             break;
-        case 1:
+        case ALBERGO:
+            //logica decisionale per l'acquisto di un albergo
             if(this->saldo>=this->costs[t][2]&&this->decide(qAskAlbergo,board)){
                 box->build_on_box();
                 this->saldo-=this->costs[t][2];

@@ -1,9 +1,4 @@
 #include "Board.h"
-#include <ctime>
-#include <iostream>
-#include <sstream>
-#include <iomanip>
-#include <vector>
 
 /*
 *   AMBROSO PIERLORENZO

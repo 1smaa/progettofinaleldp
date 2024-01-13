@@ -1,6 +1,4 @@
 #include "Board.h"
-#include <iostream>
-
 /*
 *   AMBROSO PIERLORENZO
 */
@@ -127,17 +125,7 @@ void Board::Box::print_box_info() const{
     }
 
     //Switch-case per trovare il tipo di costruzione presente sulla casella
-    switch(this->box_construction_){
-        case COSTRUZIONE_TERRENO:
-            costruzioni_casella = "Terreno";
-            break;
-        case COSTRUZIONE_CASA:
-            costruzioni_casella = "Casa";
-            break;
-        case COSTRUZIONE_ALBERGO:
-            costruzioni_casella = "Albergo";
-            break;
-    }
+    costruzioni_casella=this->construction();
 
     std::cout<< "Casella numero: "<< this->box_id_<<'\n'<<"Tipo casella: "<<tipo_casella<<'\n'<<"Costruzioni casella:"<<costruzioni_casella<<'\n'<<"Costo casella: "<<this->box_cost_<<'\n'<<"Costo pernottamento: "<<this->box_stay_cost_<<std::endl;
 }
@@ -166,6 +154,7 @@ bool Board::Box::build_on_box(){
 }
 
 std::string Board::Box::to_coordinates() const {
+    // Suddivisione relativa ai 4 lati del tabellone, se non appartiene a nessuno lancia un'eccezione
     if(this->box_id_<22&&this->box_id_>=14){
         return "A"+std::to_string(this->box_id_-13);
     }
@@ -178,7 +167,7 @@ std::string Board::Box::to_coordinates() const {
     if(this->box_id_>=22){
         return {(char)(this->box_id_+','),'8'};
     }
-    return "";
+    throw PositionError(this->box_id_);
 }
 
 
@@ -195,6 +184,7 @@ std::string Board::Box::construction() const {
         case COSTRUZIONE_ALBERGO:
             return "Albergo";
             break;
+        default: break;
     }
-    return ""; //In caso non fosse presente 
+    throw BoxError("Costruzione sulla casella "+this->getCoordinates()+" non valida.");
 }

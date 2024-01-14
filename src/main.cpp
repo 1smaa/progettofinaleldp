@@ -31,16 +31,16 @@ int main(int argc,char *argv[] ){
     		}
 			
     		giocatori.push_back(new Board::Human(3,DEFAULT_SALDO));
-			std::cout<<std::endl<<"IL GIOCATORE UMANO E' IL NUMERO: "<<std::to_string(giocatori[3]->getId())<<std::endl; //COUT per stampare il numero del giocatore umano
+			std::cout<<std::endl<<"IL GIOCATORE UMANO E' IL NUMERO: "<<std::to_string(giocatori[3]->getId()+1)<<std::endl; //COUT per stampare il numero del giocatore umano
 
 			std::ofstream log_partita; //Per scrivere sul file il log della partita
             log_partita.open("Partita_con_umano.txt", std::fstream::trunc); //Apro il file
-			if(log_partita.is_open()) log_partita<<"IL GIOCATORE UMANO E' IL NUMERO: "+std::to_string(giocatori[3]->getId()); //Scrivo anche nel file quale è il giocatore umano
+			if(log_partita.is_open()) log_partita<<"IL GIOCATORE UMANO E' IL NUMERO: "+std::to_string(giocatori[3]->getId()+1); //Scrivo anche nel file quale è il giocatore umano
 			
             //Creo il tabellone
     		Board::Board tabellone(giocatori);
             //Genero la partita
-    		Partita p(giocatori,&tabellone);
+    		Partita p(giocatori,&tabellone,true);
             //Faccio iniziare la partita
     		int t=p.inizia();
     		while(!p.terminata()){
@@ -75,7 +75,7 @@ int main(int argc,char *argv[] ){
     	    	giocatori.push_back(new Board::Computer(i,DEFAULT_SALDO));
     		}
 			Board::Board tabellone(giocatori);
-    		Partita p(giocatori,&tabellone);
+    		Partita p(giocatori,&tabellone,false);
     		int t=p.inizia();
     		while(!p.terminata()){
         		t=p.prossimoTurno();
@@ -87,17 +87,17 @@ int main(int argc,char *argv[] ){
 			if(log_partita.is_open()){ //Controllo che il file sia aperto
             	log_partita<<p.log(); //Scrivo il log della partita sul file
 			}
-
+			/*
 			std::cout<<std::endl<<std::endl<<"Il gioco è terminato!"<<std::endl;
 			std::vector<Board::Player*> inPlay=tabellone.getPlayers();
 			for(int i=0;i<inPlay.size();i++){
 				std::string to_print = "Saldo giocatore "+std::to_string(inPlay[i]->getId())+": "+std::to_string(inPlay[i]->getSaldo())+"\n\n"; //Creo una stringa così da accedere ai vector una volta sola
 	   	    	std::cout<<to_print; //Stampo a schermo le informazioni
 				if(log_partita.is_open()) log_partita<<to_print; //Scrivo su file le informazioni
-	    	}
+	    	}*/
 	    	std::vector<Board::Player*> vincitori=p.vincitore();
 	    	for(int i=0;i<vincitori.size();i++){
-				std::string to_print = "Il giocatore "+std::to_string(vincitori[i]->getId())+" ha vinto"+"\n";    	
+				std::string to_print = "Il giocatore "+std::to_string(vincitori[i]->getId()+1)+" ha vinto"+"\n";    	
 				std::cout<<to_print;
 				if(log_partita.is_open()) log_partita<<to_print;
 	    	}

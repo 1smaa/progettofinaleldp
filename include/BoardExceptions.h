@@ -2,6 +2,9 @@
 #define BOARDEXCEPTIONS_H
 
 #include <stdexcept>
+/*
+*   CIAN IRENE
+*/
 
 class PositionError : std::out_of_range {
 public:

@@ -27,10 +27,15 @@ namespace Board{
         Box(int id, int tipo);
         Box(int id, int tipo, int costruzioni);
 
-        //Funzioni per settare le variabili protected
-        void setBoxType(int type){this->box_type_ = type; }
-        void setIdBox(int id){this->box_id_ = id; }
-        void setBoxConstruction(int construction){this->box_construction_ = construction;}
+        //Funzioni per settare le variabili private
+        void setBoxType(int type){
+            if(type<0||type>4) throw BoxError("Casella non valida.");
+            this->box_type_ = type;
+        }
+        void setBoxConstruction(int construction){ 
+            if(construction<0||construction>2) throw BoxError("Costruzione non valida.");
+            this->box_construction_ = construction;
+        }
         void setBoxCost(int cost){this->box_cost_ = cost; }
         void setOwner(Player* owner){this->owner_ = owner;}
         void setBoxStayCost();
@@ -133,7 +138,7 @@ namespace Board{
     private:
         bool decide(std::string& question,Board& b) override;
     public:
-        Computer(uint id) : Player(id){};
+        explicit Computer(uint id) : Player(id){};
         Computer(uint id,int saldo) : Player(id,saldo){};
         Computer(uint id,int saldo,uint pos): Player(id,saldo,pos){};
     };
@@ -141,7 +146,7 @@ namespace Board{
     private:
         bool decide(std::string& question,Board& b) override;
     public:
-        Human(uint id) : Player(id){};
+        explicit Human(uint id) : Player(id){};
         Human(uint id,int saldo) : Player(id,saldo){};
         Human(uint id,int saldo,uint pos): Player(id,saldo,pos){};
     };
@@ -150,13 +155,14 @@ namespace Board{
         //Costruttore di default
         Board() : players_(std::vector<Player*>{}), board(std::vector<Box*>{}){};
         //Costruttore parametrizzato
-        Board(std::vector<Player*>& players_);
-
+        explicit Board(std::vector<Player*>& players_);
+        //Ottieni la casella ad un determinato indice
         Box* getBox(int id_box) const; 
-
+        //Stampa il tabellone
         std::string print_board();
+        //Ottieni i giocatori
         std::vector<Player*> getPlayers() const { return this->players_; }
-
+        //Stampa le costruzioni dei giocatori
         std::string print_player_costruction() const;
            
     private:

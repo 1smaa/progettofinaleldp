@@ -68,7 +68,7 @@ std::string Board::Board::string_to_print(Box* box, std::vector<Player*>& player
         for(int i=0; i<player.size(); i++){
             //Se il giocatore è nella posizione = all'id della casella, lo aggiungo alla casella da stampare
             if(player.at(i)->getPos() == box->getIdBox()){
-                to_return+=std::to_string(player.at(i)->getId());
+                to_return+=std::to_string(player.at(i)->getId()+1);
             }
         }
     }catch(std::out_of_range){
@@ -222,7 +222,7 @@ std::string Board::Board::print_player_costruction() const{
     //Ricavo le costruzioni di ogni giocatore dalla apposita funzione presente nella classe Player
     std::string log="";
     for(int i=0; i<this->players_.size();i++){
-       log+="Giocatore "+std::to_string(i)+" "+players_.at(i)->logConstruction()+"\n";
+       log+="Giocatore "+std::to_string(i+1)+" "+players_.at(i)->logConstruction()+"\n";
     }
     return log;
 }

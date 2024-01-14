@@ -2,22 +2,27 @@
 /*
 *   CIAN IRENE
 */
+
+#define MAX_TURNI 200
+
 //COSTRUTTORI
-Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone){
+Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, bool human){
     this-> giocatori = giocatori;
     this-> tabellone = tabellone;
     this-> turno = 0;
-    this-> s = " ";
+    this-> s = "";
     this -> d = Dadi();
     this->prossimoGiocatore=0;
+    this-> human=human;
 }
-Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno){
+Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno, bool human){
     this-> giocatori = giocatori;
     this-> tabellone = tabellone;
     this-> turno = turno;
-    this-> s = " ";
+    this-> s = "";
     this -> d = Dadi();
     this->prossimoGiocatore=0;
+    this-> human=human;
 }
 //FUNZIONI
 
@@ -36,7 +41,7 @@ int Partita::inizia(){
         for(int i=0;i<unsorted.size();i++){
             for(int j=unsorted[i].first;j<unsorted[i].second;j++){
                 int t=d.lancia();
-                this->s+="- Giocatore "+std::to_string(giocatori[j]->getId())+" ha lanciato "+std::to_string(t)+".\n";
+                this->s+="- Giocatore "+std::to_string(lanciDado[j].first->getId()+1)+" ha tirato i dadi ottenendo un valore di "+std::to_string(t)+"\n";
                 lanciDado[j].second=t;
             }
             std::sort(lanciDado.begin()+unsorted[i].first,lanciDado.begin()+unsorted[i].second,[](const auto& a,const auto& b){
@@ -80,7 +85,7 @@ int Partita::prossimoTurno(){
 
 bool Partita::terminata() const{
     //termina se rimane solo un giocatore 
-    if(this->turno>=200){
+    if(!this->human&&this->turno>=MAX_TURNI){
         return 1;
     }
     int n=0;

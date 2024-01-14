@@ -29,8 +29,7 @@
 std::map<std::string,std::function<void(Board::Board& s)>> Board::COMMANDS=std::map<std::string,std::function<void(Board& s)>>{
     //comando help per avere informazioni sui comandi del gioco
     {"help", [](Board& s) {
-        std::cout <<"Ecco la lista dei comandi: \n";
-        std::cout<<"show: Ottieni le informazioni riguardanti la partita.\n";
+        std::cout <<"Ecco la lista dei comandi: \nshow: Ottieni le informazioni riguardanti la partita\n";
     }},
     //comanndo show per mostrare le informazioni sul tabellone
     {"show",[](Board& s){
@@ -38,7 +37,7 @@ std::map<std::string,std::function<void(Board::Board& s)>> Board::COMMANDS=std::
         std::cout<<s.print_player_costruction()<<std::endl;
         std::vector<Player*> giocatori=s.getPlayers();
         for(int i=0;i<giocatori.size();i++){
-            std::cout<<"Giocatore "<<giocatori[i]->getId()<<" ha "<<giocatori[i]->getSaldo()<<" fiorini.\n";
+            std::cout<<"Giocatore "<<giocatori[i]->getId()+1<<" ha "<<giocatori[i]->getSaldo()<<" fiorini\n";
         }
     }}
 };
@@ -67,7 +66,7 @@ std::string Board::Player::processBuy(Board& board,Box* box){
         //aggiorna il saldo
         this->saldo-=this->costs[t][0];
         //aggiorna il log
-        log+="- Giocatore "+std::to_string(this->id)+" ha acquistato il terreno "+box->getCoordinates()+"\n";
+        log+="- Giocatore "+std::to_string(this->id+1)+" ha acquistato il terreno "+box->getCoordinates()+"\n";
         //aggiungi alla propria casella
         this->squares.push_back(box);
     }
@@ -77,15 +76,17 @@ std::string Board::Player::processBuy(Board& board,Box* box){
 //funzione per processare il pernottamento in un terreno
 std::string Board::Player::processStay(Board& board,Box* box){
     std::string log="";
-    //aggiorn il log
-    log+="- Giocatore "+std::to_string(this->id)+" ha pagato "+std::to_string(box->getBoxStayCost())+" fiorini a giocatore "+std::to_string(box->getOwner()->getId())+" per pernottamento nella casella "+box->getCoordinates()+"\n";
-    //aggiorna il saldo del possessore della casella
-    box->getOwner()->modifySaldo(std::min(this->saldo,box->getBoxStayCost()));
-    //aggiorna il saldo di questio giocatore
-    this->saldo-=box->getBoxStayCost();
+    if(box->getBoxStayCost()>0){
+        //aggiorn il log
+        log+="- Giocatore "+std::to_string(this->id+1)+" ha pagato "+std::to_string(box->getBoxStayCost())+" fiorini a giocatore "+std::to_string(box->getOwner()->getId()+1)+" per pernottamento nella casella "+box->getCoordinates()+"\n";
+        //aggiorna il saldo del possessore della casella
+        box->getOwner()->modifySaldo(std::min(this->saldo,box->getBoxStayCost()));
+        //aggiorna il saldo di questio giocatore
+        this->saldo-=box->getBoxStayCost();
+    }
     //se il saldo è <0 il giocatore è eliminato e le caselle vengono rimesse a disposizione
     if(this->saldo<0){
-        log+="- Giocatore "+std::to_string(this->id)+" è  stato eliminato.";
+        log+="- Giocatore "+std::to_string(this->id+1)+" è  stato eliminato";
         for(int i=0;i<this->squares.size();i++){
             this->squares[i]->setOwner(nullptr);
             this->squares[i]->setBoxConstruction(0);
@@ -108,7 +109,7 @@ std::string Board::Player::processBuild(Board& board, Box* box){
             if(this->saldo>=this->costs[t][1]&&this->decide(qAskCasa,board)){
                 box->build_on_box();
                 this->saldo-=this->costs[t][1];
-                log+="- Giocatore "+std::to_string(this->id)+" ha costruito una casa sul terreno "+box->getCoordinates()+"\n";
+                log+="- Giocatore "+std::to_string(this->id+1)+" ha costruito una casa sul terreno "+box->getCoordinates()+"\n";
             }
             break;
         case ALBERGO:
@@ -116,7 +117,7 @@ std::string Board::Player::processBuild(Board& board, Box* box){
             if(this->saldo>=this->costs[t][2]&&this->decide(qAskAlbergo,board)){
                 box->build_on_box();
                 this->saldo-=this->costs[t][2];
-                log+="- Giocatore "+std::to_string(this->id)+" ha migliorato una casa in albergo sul terreno "+box->getCoordinates()+"\n";
+                log+="- Giocatore "+std::to_string(this->id+1)+" ha migliorato una casa in albergo sul terreno "+box->getCoordinates()+"\n";
             }
             break;
         default:
@@ -147,7 +148,6 @@ bool Board::Human::decide(std::string& question,Board& b){
         std::cin>>response;
         if(this->isCommand(response)){
             COMMANDS[response](b);
-            std::cin>>response;
         }
     }while(this->isCommand(response)||(response!="S"&&response!="N"));
     return response=="S";
@@ -156,7 +156,6 @@ bool Board::Human::decide(std::string& question,Board& b){
 bool Board::Computer::decide(std::string& question,Board& b){
     //logica di decisione per computer
     bool  d=!(rand()%4);
-    std::cout<<d<<std::endl;
     return d;
 }
 
@@ -178,15 +177,15 @@ void Board::Player::log(std::string& log,std::string s){
 std::string Board::Player::move(Board& s,Dadi& d){
     std::string log="";
     int t=d.lancia();
-    this->log(log,"- Giocatore "+std::to_string(this->id)+" ha tirato i dadi ottendendo un valore di "+std::to_string(t)+"\n");
+    this->log(log,"- Giocatore "+std::to_string(this->id+1)+" ha tirato i dadi ottendendo un valore di "+std::to_string(t)+"\n");
     this->pos+=t;
     if(this->pos>=N_CASELLE){
         this->pos-=N_CASELLE;
         this->saldo+=VIA;
-        this->log(log,"- Giocatore "+std::to_string(this->id)+" è passato dal via e ha ritirato 20 fiorini\n");
+        this->log(log,"- Giocatore "+std::to_string(this->id+1)+" è passato dal via e ha ritirato 20 fiorini\n");
     }
     Box* arrivalBox=s.getBox(this->pos);
-    this->log(log,"- Giocatore "+std::to_string(this->id)+" è arrivato alla casella "+arrivalBox->getCoordinates()+"\n");
+    this->log(log,"- Giocatore "+std::to_string(this->id+1)+" è arrivato alla casella "+arrivalBox->getCoordinates()+"\n");
     if(arrivalBox->getOwner()!=NO_PLAYER&&arrivalBox->getOwner()->getId()==this->id){
         this->log(log,this->processBuild(s,arrivalBox));
     } else if(arrivalBox->getOwner()==NO_PLAYER){
@@ -194,6 +193,6 @@ std::string Board::Player::move(Board& s,Dadi& d){
     } else {
         this->log(log,this->processStay(s,arrivalBox));
     }
-    this->log(log,"- Giocatore "+std::to_string(this->id)+" ha finito il turno.\n");
+    this->log(log,"- Giocatore "+std::to_string(this->id+1)+" ha finito il turno\n");
     return log;
 }

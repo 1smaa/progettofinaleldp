@@ -164,7 +164,7 @@ namespace Board{
         std::vector<Player*> getPlayers() const { return this->players_; }
         //Stampa le costruzioni dei giocatori
         std::string print_player_costruction() const;
-           
+        ~Board();
     private:
         std::vector<Player*> players_; 
         std::vector<Box*> board;

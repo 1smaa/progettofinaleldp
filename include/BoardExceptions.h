@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 /*
-*   CIAN IRENE
+*   LORENZON ISMAELE
 */
 
 class PositionError : std::out_of_range {

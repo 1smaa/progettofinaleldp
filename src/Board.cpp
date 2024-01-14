@@ -226,3 +226,12 @@ std::string Board::Board::print_player_costruction() const{
     }
     return log;
 }
+
+Board::Board::~Board(){
+    for(int i=0;i<this->players_.size();i++){
+        delete this->players_[i];
+    }
+    for(int i=0;i<this->board.size();i++){
+        delete this->board[i];
+    }
+}

@@ -88,16 +88,16 @@ int main(int argc,char *argv[] ){
             	log_partita<<p.log(); //Scrivo il log della partita sul file
 			}
 			/*
-			std::cout<<std::endl<<std::endl<<"Il gioco è terminato!"<<std::endl;
-			std::vector<Board::Player*> inPlay=tabellone.getPlayers();
-			for(int i=0;i<inPlay.size();i++){
-				std::string to_print = "Saldo giocatore "+std::to_string(inPlay[i]->getId())+": "+std::to_string(inPlay[i]->getSaldo())+"\n\n"; //Creo una stringa così da accedere ai vector una volta sola
-	   	    	std::cout<<to_print; //Stampo a schermo le informazioni
-				if(log_partita.is_open()) log_partita<<to_print; //Scrivo su file le informazioni
+			*std::cout<<std::endl<<std::endl<<"Il gioco è terminato!"<<std::endl;
+			*std::vector<Board::Player*> inPlay=tabellone.getPlayers();
+			*for(int i=0;i<inPlay.size();i++){
+			*	std::string to_print = "Saldo giocatore "+std::to_string(inPlay[i]->getId())+": "+std::to_string(inPlay[i]->getSaldo())+"\n\n"; //Creo una stringa così da accedere ai vector una volta sola
+	   	    *	std::cout<<to_print; //Stampo a schermo le informazioni
+			*	if(log_partita.is_open()) log_partita<<to_print; //Scrivo su file le informazioni
 	    	}*/
 	    	std::vector<Board::Player*> vincitori=p.vincitore();
 	    	for(int i=0;i<vincitori.size();i++){
-				std::string to_print = "Il giocatore "+std::to_string(vincitori[i]->getId()+1)+" ha vinto"+"\n";    	
+				std::string to_print = "- Giocatore "+std::to_string(vincitori[i]->getId()+1)+" ha vinto la partita"+"\n";    	
 				std::cout<<to_print;
 				if(log_partita.is_open()) log_partita<<to_print;
 	    	}

@@ -20,11 +20,10 @@ private:
     int prossimoGiocatore;
     std::string s;
     Dadi d;
-    bool human;
 public: 
     //costruttori
-    Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, bool human);
-    Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno, bool human); 
+    Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone);
+    Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno); 
 
     //funzioni
     int inizia();

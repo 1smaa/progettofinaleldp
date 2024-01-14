@@ -40,7 +40,7 @@ int main(int argc,char *argv[] ){
             //Creo il tabellone
     		Board::Board tabellone(giocatori);
             //Genero la partita
-    		Partita p(giocatori,&tabellone,true);
+    		Partita p(giocatori,&tabellone);
             //Faccio iniziare la partita
     		int t=p.inizia();
     		while(!p.terminata()){
@@ -75,7 +75,7 @@ int main(int argc,char *argv[] ){
     	    	giocatori.push_back(new Board::Computer(i,DEFAULT_SALDO));
     		}
 			Board::Board tabellone(giocatori);
-    		Partita p(giocatori,&tabellone,false);
+    		Partita p(giocatori,&tabellone);
     		int t=p.inizia();
     		while(!p.terminata()){
         		t=p.prossimoTurno();

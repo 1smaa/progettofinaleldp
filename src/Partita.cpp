@@ -6,23 +6,21 @@
 #define MAX_TURNI 200
 
 //COSTRUTTORI
-Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, bool human){
+Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone){
     this-> giocatori = giocatori;
     this-> tabellone = tabellone;
     this-> turno = 0;
     this-> s = "";
     this -> d = Dadi();
     this->prossimoGiocatore=0;
-    this-> human=human;
 }
-Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno, bool human){
+Partita::Partita(std::vector<Board::Player*>& giocatori, Board::Board* tabellone, int turno){
     this-> giocatori = giocatori;
     this-> tabellone = tabellone;
     this-> turno = turno;
     this-> s = "";
     this -> d = Dadi();
     this->prossimoGiocatore=0;
-    this-> human=human;
 }
 //FUNZIONI
 
@@ -85,7 +83,7 @@ int Partita::prossimoTurno(){
 
 bool Partita::terminata() const{
     //termina se rimane solo un giocatore 
-    if(!this->human&&this->turno>=MAX_TURNI){
+    if(this->turno>=MAX_TURNI){
         return 1;
     }
     int n=0;

@@ -1,4 +1,5 @@
-IL GIOCATORE UMANO E' IL NUMERO: 4- Giocatore 1 ha tirato i dadi ottenendo un valore di 7
+IL GIOCATORE UMANO E' IL NUMERO: 4
+- Giocatore 1 ha tirato i dadi ottenendo un valore di 7
 - Giocatore 2 ha tirato i dadi ottenendo un valore di 3
 - Giocatore 3 ha tirato i dadi ottenendo un valore di 5
 - Giocatore 4 ha tirato i dadi ottenendo un valore di 6

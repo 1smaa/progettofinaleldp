@@ -17,3 +17,5 @@ Queste righe di codice riguardano la stampa e la scrittura su file dei saldi fin
 - Il distruttore è stato inserito all'interno di tabellone così che, con un opportuno sviluppo, è possibile riutilizzare le stesse caselle e gli stessi giocatori in più partite.
 
 - Le opzioni di ottimizzazione (-O2) sono già attive poiché è stato aggiunto il flag al CMakeLists.txt
+
+- È stata fatta la scelta di non eseguire stampe relative a pernottamenti con costo di 0 fiorini, per mancanza di utilità pratica
